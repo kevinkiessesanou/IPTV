@@ -884,6 +884,10 @@ SCENES = [
     (sc_contact, 6.0, "blur"),
     (sc_outro, 5.4, "blur"),
 ]
+_vd = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vo", "dur.json")
+if os.path.exists(_vd):
+    _d = json.load(open(_vd))
+    SCENES = [(fn, round(max(D, .3 + v + .7) * 10) / 10, tr) for (fn, D, tr), v in zip(SCENES, _d)]
 NOCORNER = {sc_outro}
 
 def frame(si, t):
