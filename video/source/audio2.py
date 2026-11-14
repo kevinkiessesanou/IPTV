@@ -64,7 +64,8 @@ def typing(t0, n, rate):
     for i in range(n): add(sfx, t0 + i * rate + rng.uniform(-.006, .006), key(), .55)
 
 # ---------------- per-scene events (times relative to scene start; must mirror v2.py animations)
-def ev(si, t, x, g=1.0): add(sfx, ST[si] + t, x, g)
+SP = tl.get("speed", [1.0] * len(ST))
+def ev(si, t, x, g=1.0): add(sfx, ST[si] + t / SP[si], x, g)
 # 0 phone
 ev(0, 0, whoosh(1.2, 200, 3000), .8)
 for k in range(7): ev(0, .5 + k * .2, pop(700 + k * 90), .45)
@@ -76,13 +77,13 @@ for i, tp in enumerate((2.3, 2.5, 2.7)): ev(1, tp, pop(800 + i * 150), .6)
 ev(1, 3.0, scratch()); ev(1, 3.3, scratch()); ev(1, 3.5, ding(1568), .7)
 # 2 laptop
 ev(2, 0, whoosh(.8, 200, 4000), .8)
-for k in range(6): ev(2, .5 + k * .22, pop(600 + k * 110), .45)
+for k in range(4): ev(2, .5 + k * .3, pop(600 + k * 110), .45)
 ev(2, 1.3, pop(500), .9); ev(2, 2.0, whoosh(.5), .5); ev(2, 2.4, pop(1000), .7)
 # 3 kinetic
-ev(3, .05, whoosh(.45), 1.0); ev(3, 1.7, swish_out(), .8); ev(3, 1.8, whoosh(.45), 1.0)
-ev(3, .4, rise_tone(1.0), .6); ev(3, 2.3, rise_tone(.7), .6)
+ev(3, .0, whoosh(.4), 1.0); ev(3, .95, swish_out(), .8); ev(3, 1.0, whoosh(.4), 1.0)
+ev(3, .3, rise_tone(.6), .6); ev(3, 1.35, rise_tone(.55), .6)
 # 4 light head
-ev(4, .05, whoosh(.4), .9); ev(4, .45, whoosh(.4, 800, 7000), .7); ev(4, 1.2, rise_tone(.7), .6); ev(4, 1.9, blip(2200), .6)
+ev(4, .0, whoosh(.4), .9); ev(4, 1.0, whoosh(.4, 800, 7000), .8); ev(4, 1.45, rise_tone(.55), .6); ev(4, 2.0, blip(2200), .6)
 # 5 section
 ev(5, .15, impact(), .9); ev(5, .2, shimmer(), .8)
 # services
@@ -119,7 +120,7 @@ ev(11, 1.0, rise_tone(2.8), .6); ev(11, 3.8, ding(1760), .7)
 # 12 stack
 for i in range(5): ev(12, .3 + i * .75, whoosh(.3, 1500, 8000), .6); ev(12, .3 + i * .75, pop(700 + i * 140), .7)
 # 13 kin2
-ev(13, .05, whoosh(.45), 1.0); ev(13, .85, impact(), 1.0); ev(13, 1.6, rise_tone(.8), .6)
+ev(13, .0, whoosh(.45), 1.0); ev(13, 1.3, impact(), 1.0); ev(13, 1.8, rise_tone(.6), .6)
 # 14 contact
 ev(14, .05, whoosh(.45), .8); ev(14, .5, whoosh(.4), .4)
 typing(ST[14] + 1.0, len("Bonjour, j'ai un projet digital !"), .043)
@@ -127,22 +128,18 @@ ev(14, 2.6, click(), 1.0); ev(14, 2.8, whoosh(.35, 2000, 9000), .8); ev(14, 2.8,
 for i in range(4): ev(14, 2.2 + i * .3, toggle(), .8)
 # 15 outro
 add(sfx, ST[15] - 1.4, riser(1.4), .8)
-ev(15, .2, impact(), 1.2); ev(15, 1.4, shimmer(), 1.0); ev(15, 2.5, pop(1200), .6)
+ev(15, .2, impact(), 1.2); ev(15, .9, shimmer(), 1.0); ev(15, 2.0, pop(1200), .6)
 # whooshes on every transition
 for i in range(1, len(ST)):
     if TR[i] == "whip": add(sfx, ST[i] - .18, whoosh(.45, 600, 7000), .55)
     elif TR[i] == "blur": add(sfx, ST[i] - .25, whoosh(.6, 200, 2500), .35)
 
-# ---------------- voice
-dur = json.load(open(os.path.join(HERE, "vo/dur.json")))
-for i in range(len(dur)):
-    w = wave.open(os.path.join(HERE, "vo/l%02d.wav" % i)); fr = w.getframerate()
-    x = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
-    x = np.interp(np.arange(int(len(x) * sr / fr)) * fr / sr, np.arange(len(x)), x)
-    if not os.environ.get("NOVOICE"): add(voice, ST[i] + .3, x / (np.abs(x).max() + 1e-9) * .95)
-# voice presence: gentle high-shelf-ish via adding a bit of derivative
-voice = voice + np.concatenate([[0], np.diff(voice)]) * 1.2
-
+# ---------------- voice (ElevenLabs)
+import subprocess
+EL = os.environ["ELVOICE"]
+raw = subprocess.run(["ffmpeg", "-v", "error", "-i", EL, "-f", "s16le", "-ac", "1", "-ar", str(sr), "-"], capture_output=True).stdout
+x = np.frombuffer(raw, np.int16).astype(np.float32) / 32768
+add(voice, 0.0, x / (np.abs(x).max() + 1e-9) * .95)
 # ---------------- music (energetic, 118 bpm)
 bpm = 118; beat = 60 / bpm; bar = 4 * beat
 def mtof(m): return 440 * 2 ** ((m - 69) / 12)
@@ -186,7 +183,7 @@ while d0 + k * beat < d1:
 env = np.abs(voice); win = int(.12 * sr)
 env = np.convolve(env, np.ones(win) / win, "same")
 duck = 1 - .6 * np.clip(env / (env.max() * .25 + 1e-9), 0, 1) if env.max() > 0 else 1.0
-mix = music * .55 * duck + sfx * .55 + voice * 1.0
+mix = music * .5 * duck + sfx * .5 + voice * 1.0
 mix = mix[:int(T * sr)]
 fi = int(.5 * sr); mix[:fi] *= np.linspace(0, 1, fi)
 fo = int(1.2 * sr); mix[-fo:] *= np.linspace(1, 0, fo)

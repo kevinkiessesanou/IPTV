@@ -521,12 +521,12 @@ def sc_laptop(t, D):
 
 def sc_kin1(t, D):
     img = bg("blue", t)
-    kin(img, "Et vous êtes", 150, W / 2, H / 2 - 30, t, .1, out=1.7)
-    underline(img, W / 2 - 300, H / 2 + 90, 600, ease(prog(t, .4, 1.4)) * (1 - prog(t, 1.7, 1.9)), WHITE, 5)
-    kin(img, "au bon endroit.", 150, W / 2, H / 2 - 30, t, 1.85)
-    if t > 2.2:
+    kin(img, "Et vous êtes", 150, W / 2, H / 2 - 30, t, .05, out=.95)
+    underline(img, W / 2 - 300, H / 2 + 90, 600, ease(prog(t, .3, .9)) * (1 - prog(t, .95, 1.1)), WHITE, 5)
+    kin(img, "au bon endroit.", 150, W / 2, H / 2 - 30, t, 1.1)
+    if t > 1.3:
         L = tw("au bon endroit.", 150, "ExtraBold")
-        underline(img, W / 2 - L / 2, H / 2 + 90, L, ease(prog(t, 2.3, 3.0)), WHITE, 5)
+        underline(img, W / 2 - L / 2, H / 2 + 90, L, ease(prog(t, 1.35, 1.9)), WHITE, 5)
     return img
 
 def sc_light_head(t, D):
@@ -534,9 +534,9 @@ def sc_light_head(t, D):
     kin(img, "Tout le digital,", 140, W / 2, H / 2 - 95, t, .1, INK)
     s1, s2 = "une seule ", "équipe."
     L = tw(s1 + s2, 140, "ExtraBold"); x0 = W / 2 - L / 2
-    kin(img, s1, 140, x0, H / 2 + 70, t, .5, INK, anchor="l")
-    kin(img, s2, 140, x0 + tw(s1, 140, "ExtraBold"), H / 2 + 70, t, .62, BLUE, anchor="l")
-    underline(img, x0 + tw(s1, 140, "ExtraBold"), H / 2 + 165, tw(s2, 140, "ExtraBold") - 30, ease(prog(t, 1.2, 1.9)), ORANGE, 8)
+    kin(img, s1, 140, x0, H / 2 + 70, t, 1.05, INK, anchor="l")
+    kin(img, s2, 140, x0 + tw(s1, 140, "ExtraBold"), H / 2 + 70, t, 1.15, BLUE, anchor="l")
+    underline(img, x0 + tw(s1, 140, "ExtraBold"), H / 2 + 165, tw(s2, 140, "ExtraBold") - 30, ease(prog(t, 1.45, 2.0)), ORANGE, 8)
     return img
 
 def sc_section(t, D):
@@ -792,14 +792,14 @@ def sc_kin2(t, D):
     zoom = lerp(1.15, 1.0, ease5(prog(t, 0, .9)))
     kin(img, "Si c'est digital,", 150, W / 2, H / 2 - 90, t, .1)
     s = "c'est NTIC."
-    txt_a = ease(prog(t, .9, 1.4))
+    txt_a = ease(prog(t, 1.3, 1.7))
     if txt_a > 0:
         sp = T(s, 150, WHITE, "ExtraBold")
         g = blur_sp(T(s, 150, (120, 150, 255), "ExtraBold"), 18)
         paste(img, g, W / 2, H / 2 + 80, txt_a * .9, zoom)
-        paste(img, sp, W / 2, H / 2 + 80, txt_a, lerp(1.3, 1, ease5(prog(t, .9, 1.5))), blur=(1 - txt_a) * 12)
+        paste(img, sp, W / 2, H / 2 + 80, txt_a, lerp(1.3, 1, ease5(prog(t, 1.3, 1.8))), blur=(1 - txt_a) * 12)
         L = tw(s, 150, "ExtraBold")
-        underline(img, W / 2 - L / 2 + 10, H / 2 + 175, L - 20, ease(prog(t, 1.6, 2.4)), ORANGE, 7)
+        underline(img, W / 2 - L / 2 + 10, H / 2 + 175, L - 20, ease(prog(t, 1.8, 2.4)), ORANGE, 7)
     return img
 
 def sc_contact(t, D):
@@ -854,14 +854,22 @@ def sc_outro(t, D):
     k = pop(prog(t, .2, .9))
     paste(img, blur_sp(ORB(120, "blue"), 30), cx, cy, ease(prog(t, .2, .9)) * .8, 1.6)
     paste(img, LOGO(240), cx, cy, ease(prog(t, .2, .6)), max(k, .01))
-    a = ease5(prog(t, .9, 1.6))
+    sh = prog(t, .9, 1.6)
+    if 0 < sh < 1:
+        band = Image.new("RGBA", (70, 300), (255, 255, 255, 0)); bd = ImageDraw.Draw(band)
+        for i in range(70): bd.line([i, 0, i, 300], fill=(255, 255, 255, int(120 * math.sin(math.pi * i / 70))))
+        m = Image.new("L", (240, 240), 0); ImageDraw.Draw(m).ellipse([8, 8, 232, 232], fill=255)
+        layer = Image.new("RGBA", (240, 240), (0, 0, 0, 0)); layer.alpha_composite(band.rotate(20, expand=False).crop((0, 30, 70, 270)), (int(-70 + sh * 380), 0))
+        layer.putalpha(Image.fromarray((np.asarray(layer.getchannel("A")).astype(np.float32) * np.asarray(m) / 255).astype(np.uint8)))
+        paste(img, layer, cx, cy)
+    a = ease5(prog(t, .5, 1.1))
     txt(img, "NTIC SOLUTION", 70, cx, cy + 210 + (1 - a) * 30, WHITE, "ExtraBold", a, track=10, blur=(1 - a) * 8)
-    L = 200 * ease(prog(t, 1.4, 2.1))
+    L = 200 * ease(prog(t, 1.0, 1.6))
     paste(img, Image.new("RGBA", (max(1, int(L)), 6), ORANGE + (255,)), cx, cy + 270, a)
-    b = ease(prog(t, 1.9, 2.5))
+    b = ease(prog(t, 1.3, 1.8))
     txt(img, "L'Univers du Digital", 40, cx, cy + 320, ORANGE, "SemiBoldItalic" if os.path.exists(FD + "InterDisplay-SemiBoldItalic.otf") else "SemiBold", b)
-    c = ease(prog(t, 2.5, 3.0))
-    paste(img, PILL("nticsolution.org", 30, "glass"), cx, cy + 420, c, pop(prog(t, 2.5, 3.0)))
+    c = ease(prog(t, 2.0, 2.5))
+    paste(img, PILL("nticsolution.org", 30, "glass"), cx, cy + 420, c, pop(prog(t, 2.0, 2.5)))
     f = prog(t, D - .7, D)
     if f > 0: img.alpha_composite(Image.new("RGBA", (W, H), (0, 0, 0, int(255 * f))))
     return img
@@ -884,21 +892,51 @@ SCENES = [
     (sc_contact, 6.0, "blur"),
     (sc_outro, 5.4, "blur"),
 ]
-_vd = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vo", "dur.json")
-if os.path.exists(_vd):
-    _d = json.load(open(_vd))
-    SCENES = [(fn, round(max(D, .3 + v + .7) * 10) / 10, tr) for (fn, D, tr), v in zip(SCENES, _d)]
+_el = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "el_timing.json")))
+_st = _el["starts"] + [_el["end"] + 2.4]
+_fr = [round(x * FPS) for x in _st]
+BASE = [D for _, D, _ in SCENES]
+SCENES = [(fn, (_fr[i + 1] - _fr[i]) / FPS, tr) for i, (fn, D, tr) in enumerate(SCENES)]
+SPEED = [1.0] * len(SCENES)
+for i, sp in {0: 1.45, 2: 1.75, 5: 1.3}.items(): SPEED[i] = sp
 NOCORNER = {sc_outro}
+LIGHT_SCENES = {sc_light_head, sc_web, sc_mkt, sc_design, sc_stack, sc_contact}
 
 def frame(si, t):
     fn, D, _ = SCENES[si]
-    img = fn(t, D)
+    sp = SPEED[si]
+    img = fn(t * sp, D * sp)
+    dust(img, si, t)
     if fn not in NOCORNER: corner(img)
-    z = 1 + .035 * (t / D)
+    z = 1 + .035 * (t / D) + .06 * (1 - ease5(prog(t, 0, .45)))
     if z > 1.001:
         cw, ch = W / z, H / z
         img = img.resize((W, H), Image.BILINEAR, box=((W - cw) / 2, (H - ch) / 2, (W + cw) / 2, (H + ch) / 2))
-    return img.convert("RGB")
+    img = img.convert("RGB")
+    return grain(img, si, t)
+
+_GR = None
+def grain(img, si, t):
+    global _GR
+    if _GR is None:
+        r = np.random.default_rng(3); _GR = [r.normal(0, 1, (H // 2, W // 2)).astype(np.float32) for _ in range(6)]
+    g = _GR[int(t * FPS) % 6]
+    g = np.repeat(np.repeat(g, 2, 0), 2, 1)[..., None] * 5.0
+    a = np.asarray(img).astype(np.float32) + g
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+
+_DUST = [(random.Random(i).uniform(0, W), random.Random(i + 99).uniform(0, H), random.Random(i + 7).uniform(1.5, 4.5), random.Random(i + 3).uniform(10, 40)) for i in range(40)]
+def dust(img, si, t):
+    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+    light = SCENES[si][0] in LIGHT_SCENES
+    col = (90, 120, 255) if light else (200, 215, 255)
+    for i, (x, y, r, v) in enumerate(_DUST):
+        yy = (y - t * v) % H; xx = x + math.sin(t * .6 + i) * 20
+        a = int((90 if light else 120) * (.5 + .5 * math.sin(t * 2 + i)))
+        d.ellipse([xx - r, yy - r, xx + r, yy + r], fill=col + (a,))
+        if i % 9 == 0:
+            d.line([xx - r * 3, yy, xx + r * 3, yy], fill=col + (a,), width=1); d.line([xx, yy - r * 3, xx, yy + r * 3], fill=col + (a,), width=1)
+    img.alpha_composite(lay)
 
 def lowsmear(im, amt):
     s = im.resize((W // 3, H // 3), Image.BILINEAR).convert("RGBA")
@@ -945,4 +983,4 @@ if __name__ == "__main__":
     with Pool(4) as pool:
         for o in pool.imap_unordered(render_scene, only): print("done", o, flush=True)
     ts, total = timeline()
-    json.dump({"starts": ts, "total": total, "trans": [s[2] for s in SCENES]}, open(os.path.join(OUTDIR, "timeline.json"), "w"))
+    json.dump({"starts": ts, "total": total, "trans": [s[2] for s in SCENES], "speed": SPEED}, open(os.path.join(OUTDIR, "timeline.json"), "w"))
