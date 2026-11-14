@@ -139,7 +139,7 @@ for i in range(len(dur)):
     w = wave.open(os.path.join(HERE, "vo/l%02d.wav" % i)); fr = w.getframerate()
     x = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
     x = np.interp(np.arange(int(len(x) * sr / fr)) * fr / sr, np.arange(len(x)), x)
-    add(voice, ST[i] + .3, x / (np.abs(x).max() + 1e-9) * .95)
+    if not os.environ.get("NOVOICE"): add(voice, ST[i] + .3, x / (np.abs(x).max() + 1e-9) * .95)
 # voice presence: gentle high-shelf-ish via adding a bit of derivative
 voice = voice + np.concatenate([[0], np.diff(voice)]) * 1.2
 
@@ -185,7 +185,7 @@ while d0 + k * beat < d1:
 # ---------------- mix with ducking under voice
 env = np.abs(voice); win = int(.12 * sr)
 env = np.convolve(env, np.ones(win) / win, "same")
-duck = 1 - .6 * np.clip(env / (env.max() * .25 + 1e-9), 0, 1)
+duck = 1 - .6 * np.clip(env / (env.max() * .25 + 1e-9), 0, 1) if env.max() > 0 else 1.0
 mix = music * .55 * duck + sfx * .55 + voice * 1.0
 mix = mix[:int(T * sr)]
 fi = int(.5 * sr); mix[:fi] *= np.linspace(0, 1, fi)
