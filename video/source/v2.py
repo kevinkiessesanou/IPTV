@@ -679,8 +679,7 @@ def sc_mkt(t, D):
         txt(img, "votre marque", 40, ox - 200, cy - 15, (255, 210, 160), "Bold", k, "l")
         hp = pop(prog(t, 1.6, 2.0))
         paste(img, ICON("heart", 50, t, acc=(240, 60, 90)), ox - 200, cy + 210, k, max(hp, .01) if t > 1.6 else .8)
-        likes = int(1250 * ease(prog(t, 1.6, 3.6)))
-        txt(img, "{:,}".format(likes).replace(",", " ") + " j'aime", 30, ox - 160, cy + 210, INK, "Bold", k, "l")
+        txt(img, "J'aime  ·  Commenter  ·  Partager", 26, ox - 160, cy + 210, INK, "Bold", k, "l")
     # chart
     k2 = ease5(prog(t, 1.0, 1.6))
     gx, gy = 1340, H / 2 + 20
@@ -696,9 +695,8 @@ def sc_mkt(t, D):
             d.line(pts, fill=BLUE + (255,), width=7, joint="curve")
         img.alpha_composite(lay)
         if len(pts) > 1: paste(img, ORB(12, "orange"), pts[-1][0], pts[-1][1], 1)
-        txt(img, "+%d" % int(250 * p), 74, ox - 260, gy - 130, INK, "ExtraBold", k2, "l")
-        txt(img, "%", 36, ox - 260 + tw("+%d" % int(250 * p), 74, "ExtraBold") + 4, gy - 118, INK, "Bold", k2, "l")
-        txt(img, "de visibilité", 28, ox + 60, gy - 125, (110, 115, 140), "SemiBold", k2, "l")
+        txt(img, "Votre visibilité", 50, ox - 260, gy - 135, INK, "ExtraBold", k2, "l")
+        paste(img, PILL("En hausse", 22, "soft", dot=ORANGE), ox + 205, gy - 135, ease(prog(t, 2.6, 3.0)), pop(prog(t, 2.6, 3.0)))
     tags(img, t, ["Community management", "Référencement", "Publicités sponsorisées"], 980, 2.6, dark=False, x=None)
     return img
 
