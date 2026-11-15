@@ -22,7 +22,7 @@ v2.BLUE = BL; v2.ORANGE = OR; v2.INK = INKB
 A = dict(loop=3.83, site=5.12, pay3=7.18, trades=[8.97, 9.92, 10.63, 11.15, 11.73, 12.55, 13.24, 14.01],
          chaque=14.90, appli=17.30, kibaa=18.64, kibaa2=20.20, projet=23.81, sait=25.06, prix=26.12, delai=28.82,
          st1=30.92, st2=33.15, st3=35.48, st4=37.41, paiement=39.67, p50=40.42, p30=41.97, p20=43.18, reste=45.78,
-         conf=47.79, case=49.17, votre=50.26, cta=51.10, cherche=52.55, trouve=54.28, end=57.0)
+         conf=47.79, case=49.17, votre=50.26, cta=51.10, cherche=52.55, trouve=54.28, end=58.6)
 
 # ---------------------------------------------------------------- backgrounds
 def _white():
@@ -161,9 +161,10 @@ def chat_screen(w, h, t, t0):
 # ---------------------------------------------------------------- scenes (t = absolute time)
 def sc_search(t):
     img = bg("white", t)
+    txt(img, "Vos clients vous cherchent en ligne.", 64, W / 2, 140, INKB, "ExtraBold", 1, scale=lerp(1.12, 1, ease5(prog(t, 0, .35))))
     k = ease5(prog(t, 0, .6))
     # big search bar
-    paste(img, CARD(1100, 120, 60, "light"), W / 2, 300 + (1 - k) * -80, k)
+    paste(img, CARD(1100, 120, 60, "light"), W / 2, 300 + (1 - k) * -80, max(k, .35))
     q = "restaurant Banfora"; n = int(len(q) * prog(t, .15, 1.0))
     txt(img, q[:n] + ("|" if int(t * 3) % 2 == 0 else ""), 48, W / 2 - 480, 300, INKB, "SemiBold", k, "l")
     lay = Image.new("RGBA", (60, 60), (0, 0, 0, 0)); dd = ImageDraw.Draw(lay)
@@ -435,15 +436,31 @@ def sc_cta(t):
         b = ease(prog(t, A["trouve"], A["trouve"] + .3))
         if b > 0: paste(img, PILL("Trouvé  ✓", 40, "orange", w="ExtraBold"), W / 2 + 430, 360, b, pop(prog(t, A["trouve"], A["trouve"] + .4)))
         return img
-    # end card – white, logo + arcs
+    # end card – presentation, location, CTA
     e = ease(prog(t, A["trouve"] + .8, A["trouve"] + 1.2))
-    signal(img, W / 2, 420, t, BL, .5, 4, base_r=150, gap=60, width=14)
-    signal(img, W / 2, 420, t + .5, OR, .5, 4, flip=True, base_r=150, gap=60, width=14)
-    paste(img, LOGO(260), W / 2, 420, e, pop(prog(t, A["trouve"] + .8, A["trouve"] + 1.3)))
-    txt(img, "NTIC SOLUTION", 76, W / 2, 640, BL, "ExtraBold", e, track=10)
-    txt(img, "Développement web & mobile", 40, W / 2, 720, OR, "Bold", e)
-    paste(img, PILL("WhatsApp  +226 69 69 69 24", 46, "orange", w="ExtraBold"), W / 2, 860, e, pop(prog(t, A["trouve"] + 1.1, A["trouve"] + 1.5)))
+    signal(img, 560, 330, t, BL, .5, 4, base_r=130, gap=50, width=12)
+    signal(img, 560, 330, t + .5, OR, .5, 4, flip=True, base_r=130, gap=50, width=12)
+    paste(img, LOGO(230), 560, 330, e, pop(prog(t, A["trouve"] + .8, A["trouve"] + 1.3)))
+    txt(img, "NTIC SOLUTION", 70, 560, 540, BL, "ExtraBold", e, track=8)
+    txt(img, "Agence digitale  ·  L'Univers du Digital", 34, 560, 610, OR, "Bold", e)
+    txt(img, "Secteur 15, Quartier Tatana  ·  Banfora, Burkina Faso", 30, 560, 670, INKB, "SemiBold", e)
+    paste(img, PILL("WhatsApp  +226 69 69 69 24", 42, "orange", w="ExtraBold"), 560, 800, e, pop(prog(t, A["trouve"] + 1.1, A["trouve"] + 1.5)))
+    b = ease(prog(t, A["trouve"] + 1.5, A["trouve"] + 1.9))
+    paste(img, CARD(460, 560, 40, "light"), 1400, 520, b)
+    paste(img, QR(380), 1400, 470, b, pop(prog(t, A["trouve"] + 1.5, A["trouve"] + 2.0)))
+    txt(img, "Scannez et écrivez « SITE »", 30, 1400, 730, BL, "ExtraBold", b)
     return img
+
+_QR = {}
+def QR(sz):
+    if sz not in _QR:
+        import qrcode
+        q = qrcode.QRCode(border=1, box_size=10, error_correction=qrcode.constants.ERROR_CORRECT_M)
+        q.add_data("https://wa.me/22669696924?text=SITE"); q.make()
+        im = q.make_image(fill_color=BL, back_color="white").convert("RGBA").resize((sz, sz), Image.NEAREST)
+        lg = LOGO(int(sz * .24)); im.alpha_composite(lg, ((sz - lg.width) // 2, (sz - lg.height) // 2))
+        _QR[sz] = im
+    return _QR[sz]
 
 SC = [(0.0, sc_search, "cut"), (A["loop"], sc_loop, "wipeB"), (A["trades"][0] - .02, sc_trades, "wipeO"), (A["chaque"], sc_split, "wipeB"),
       (A["kibaa"], sc_kibaa, "wipeO"), (A["projet"], sc_sait, "wipeB"), (A["prix"], sc_prix, "wipeB"), (A["st1"], sc_method, "wipeO"),

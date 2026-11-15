@@ -61,7 +61,7 @@ def paste(img, sp, x, y, a=1.0, scale=1.0, sm=0, blur=0, anchor="c", rot=0):
     elif anchor == "r": x -= sp.width; y -= sp.height / 2
     x, y = int(round(x)), int(round(y))
     sx0, sy0 = max(0, -x), max(0, -y)
-    sx1, sy1 = min(sp.width, W - x), min(sp.height, H - y)
+    sx1, sy1 = min(sp.width, img.width - x), min(sp.height, img.height - y)
     if sx1 <= sx0 or sy1 <= sy0: return
     if (sx0, sy0, sx1, sy1) != (0, 0, sp.width, sp.height): sp = sp.crop((sx0, sy0, sx1, sy1))
     img.alpha_composite(sp, (x + sx0, y + sy0))
