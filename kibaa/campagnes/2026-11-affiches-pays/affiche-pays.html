@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&family=Inter:wght@500;600;700;800;900&display=block" rel="stylesheet">
+<style>
+:root{--vert:#009E49;--action:#007A38;--jaune:#FACC15;--profond:#04331C;--para:#D7EEE0;--ment:#CFEBDA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:var(--h);overflow:hidden;font-family:Inter,sans-serif;color:#fff;background:var(--profond)}
+.page{position:relative;width:1080px;height:var(--h);padding:var(--pt) 70px var(--pb);display:flex;flex-direction:column;
+ background:radial-gradient(circle at 50% 50%,rgba(0,158,73,.6),rgba(4,51,28,0) 60%),var(--profond)}
+.page:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 2px,transparent 2.5px);background-size:40px 40px}
+header{display:flex;justify-content:space-between;align-items:center;position:relative}
+header img{height:64px}
+.sur{display:flex;align-items:center;gap:14px;color:var(--jaune);font-weight:800;font-size:23px;letter-spacing:.2em}
+.sur i{width:44px;height:6px;border-radius:3px;background:var(--jaune);display:block}
+.top{position:relative;text-align:center;margin-top:calc(30px*var(--k))}
+.acc{font-weight:600;font-size:calc(30px*var(--k));color:var(--para)}
+h1{font-family:Sora,'Inter Display',sans-serif;font-weight:800;font-size:calc(var(--ts)*var(--k));line-height:1;letter-spacing:-.045em;margin-top:12px}
+h1 em{font-style:normal;color:var(--jaune);white-space:nowrap}
+.mapw{position:relative;flex:1;min-height:0}
+#map{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ben{position:relative;display:flex;flex-direction:column;gap:12px;margin-bottom:calc(26px*var(--k))}
+.b{background:#fff;color:var(--profond);border-radius:20px;padding:calc(15px*var(--k)) 22px;display:flex;align-items:center;gap:14px;font-weight:600;font-size:calc(25px*var(--k));line-height:1.25}
+.b svg{flex:none;width:36px;height:36px;stroke:var(--vert);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+footer{display:flex;justify-content:space-between;align-items:center;position:relative}
+.cta b{display:block;font-weight:900;font-size:calc(36px*var(--k))}
+.cta span{font-weight:600;font-size:calc(25px*var(--k));color:var(--para)}
+.badge{height:76px}
+.ment{position:relative;text-align:center;font-weight:600;font-size:21px;color:var(--ment);margin-top:22px}
+</style></head><body>
+<div class="page">
+<header><img src="../../logos/kibaa_logo_horizontal_fond_sombre.png" alt="KIBAA"><div class="sur"><i></i><span id="sur"></span></div></header>
+<div class="top"><div class="acc" id="acc"></div><h1 id="h1"></h1></div>
+<div class="mapw"><svg id="map"></svg></div>
+<div class="ben" id="ben"></div>
+<footer><div class="cta"><b>Téléchargez KIBAA.</b><span>Gratuit. « Kibaa » — parlons.</span></div><img class="badge" src="../../badge-google-play.png" alt="Disponible sur Google Play"></footer>
+<div class="ment">kibaa.online · Facebook @kibaa.online · TikTok @kibaa.app · YouTube @kibaa-app</div>
+</div>
+<script src="../2026-11-ouverture-19-pays/carte-dispo.js"></script>
+<script>
+const q=new URLSearchParams(location.search),f=q.get('f')==='916',code=q.get('c')||'bf',r=document.documentElement.style;
+r.setProperty('--h',f?'1920px':'1350px');r.setProperty('--k',f?'1.15':'1');r.setProperty('--pt',f?'250px':'70px');r.setProperty('--pb',f?'250px':'50px');
+const I={
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+ sig:'<path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8"/>',
+ shop:'<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/>',
+ gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/>'};
+const UNIV=[['lock',"Votre numéro n'est jamais montré aux autres"],['sig','Fonctionne même avec une petite connexion'],['shop','Commerçants : catalogue, commandes, factures, gratuit']];
+const CREA=['gift','Créateurs : des Cadeaux sous vos vidéos, 97 % pour vous'];
+const P={
+ bf:{sur:'FIERTÉ',acc:'Conçue à Banfora, pour toute l\'Afrique.',h:'Née au <em>Burkina Faso.</em>',ben:[UNIV[0],UNIV[2],CREA]},
+ ml:{sur:'NOUVEAU',acc:'Née au Burkina Faso, pour l\'Afrique.',h:'Disponible<br>au <em>Mali.</em>',ben:UNIV},
+ ci:{sur:'NOUVEAU',acc:'Née au Burkina Faso, pour l\'Afrique.',h:'Disponible en<br><em>Côte d\'Ivoire.</em>',ben:[UNIV[0],UNIV[2],CREA]},
+ sn:{sur:'NOUVEAU',acc:'Née au Burkina Faso, pour l\'Afrique.',h:'Disponible<br>au <em>Sénégal.</em>',ben:UNIV},
+ bj:{sur:'NOUVEAU',acc:'Née au Burkina Faso, pour l\'Afrique.',h:'Disponible<br>au <em>Bénin.</em>',ben:UNIV},
+ cd:{sur:'NOUVEAU',acc:'Née au Burkina Faso, pour l\'Afrique.',h:'Disponible<br>en <em>RD Congo.</em>',ben:UNIV},
+ cm:{sur:'NOUVEAU',acc:'Née au Burkina Faso, pour l\'Afrique.',h:'Disponible<br>au <em>Cameroun.</em>',ben:UNIV}}[code];
+r.setProperty('--ts',code==='ci'?'96px':'110px');
+document.getElementById('sur').textContent=P.sur;document.getElementById('acc').textContent=P.acc;document.getElementById('h1').innerHTML=P.h;
+document.getElementById('ben').innerHTML=P.ben.map(([i,t])=>`<div class="b"><svg viewBox="0 0 24 24">${I[i]}</svg>${t}</div>`).join('');
+const c=DISPO.countries.find(x=>x.flag===code);
+const svg=document.getElementById('map'),bx=svg.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${bx.width} ${bx.height}`);
+const tmp=document.createElementNS('http://www.w3.org/2000/svg','path');tmp.setAttribute('d',c.d);svg.appendChild(tmp);const bb=tmp.getBBox();svg.removeChild(tmp);
+const labH=70,aw=bx.width-80,ah=bx.height-labH-40,sc=Math.min(aw/bb.width,ah/bb.height);
+const cx=bx.width/2,cy=20+ah/2+10,tx=cx-(bb.x+bb.width/2)*sc,ty=cy-(bb.y+bb.height/2)*sc;
+// piquet sur la capitale (point de la carte)
+const px=c.p[0]*sc+tx,py=c.p[1]*sc+ty,R=44,h=112;
+svg.innerHTML=`<defs><filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#000" flood-opacity=".5"/></filter></defs>
+<g transform="translate(${tx},${ty}) scale(${sc})" filter="url(#sh)"><clipPath id="cp"><path d="${c.d}"/></clipPath>
+<image href="../2026-11-ouverture-19-pays/flags/${code}.svg" x="${bb.x}" y="${bb.y}" width="${bb.width}" height="${bb.height}" preserveAspectRatio="xMidYMid slice" clip-path="url(#cp)"/>
+<path d="${c.d}" fill="none" stroke="#fff" stroke-width="${5/sc}" stroke-linejoin="round"/></g>
+<g transform="translate(${px},${py})" filter="url(#sh)"><ellipse rx="20" ry="7" fill="rgba(0,0,0,.35)"/>
+<path d="M0 0 C ${-R*.35} ${-h*.35} ${-R} ${-h+R*1.05} ${-R} ${-h+R} A ${R} ${R} 0 1 1 ${R} ${-h+R} C ${R} ${-h+R*1.05} ${R*.35} ${-h*.35} 0 0Z" fill="#fff" stroke="#009E49" stroke-width="4"/>
+<image href="../../logos/kibaa_symbole_couleur.png" x="${-R*.72}" y="${-h+R*.28}" width="${R*1.44}" height="${R*1.44}"/></g>
+<g transform="translate(${cx},${bx.height-labH/2})"><rect x="-200" y="-34" width="400" height="68" rx="34" fill="#fff"/>
+<text y="13" text-anchor="middle" font-family="Sora,Inter" font-weight="800" font-size="36" fill="#04331C" letter-spacing="-1" id="lab">${c.name}</text></g>`;
+const lab=document.getElementById('lab'),w=lab.getComputedTextLength()+80;lab.previousElementSibling.setAttribute('x',-w/2);lab.previousElementSibling.setAttribute('width',w);
+</script></body></html>
