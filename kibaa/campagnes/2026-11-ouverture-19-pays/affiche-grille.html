@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&family=Inter:wght@500;600;800;900&display=block" rel="stylesheet">
+<style>
+:root{--vert:#009E49;--action:#007A38;--jaune:#FACC15;--profond:#04331C;--para:#D7EEE0;--ment:#CFEBDA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:var(--h);overflow:hidden;font-family:Inter,sans-serif;color:#fff;background:var(--profond)}
+.page{position:relative;width:1080px;height:var(--h);padding:var(--pt) 70px var(--pb);display:flex;flex-direction:column;
+ background:radial-gradient(circle at 50% 55%,rgba(0,158,73,.55),rgba(4,51,28,0) 62%),var(--profond)}
+.page:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 2px,transparent 2.5px);background-size:40px 40px}
+header{display:flex;justify-content:space-between;align-items:center;position:relative}
+header img{height:64px}
+.sur{display:flex;align-items:center;gap:14px;color:var(--jaune);font-weight:800;font-size:23px;letter-spacing:.2em}
+.sur i{width:44px;height:6px;border-radius:3px;background:var(--jaune);display:block}
+.top{position:relative;text-align:center;margin-top:calc(34px*var(--k))}
+.acc{font-weight:600;font-size:calc(30px*var(--k));color:var(--para)}
+h1{font-family:Sora,'Inter Display',sans-serif;font-weight:800;font-size:calc(104px*var(--k));line-height:1;letter-spacing:-.045em;margin-top:14px}
+h1 em{font-style:normal;color:var(--jaune);white-space:nowrap}
+.exp{font-weight:500;font-size:calc(30px*var(--k));line-height:1.4;color:var(--para);margin-top:16px}
+.mapw{position:relative;flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+#map{width:100%;height:100%;overflow:visible}
+footer{display:flex;justify-content:space-between;align-items:center;position:relative}
+.cta b{display:block;font-weight:900;font-size:calc(36px*var(--k))}
+.cta span{font-weight:600;font-size:calc(25px*var(--k));color:var(--para)}
+.badge{height:76px}
+.ment{position:relative;text-align:center;font-weight:600;font-size:21px;color:var(--ment);margin-top:22px}
+</style></head><body>
+<div class="page">
+<header><img src="../../logos/kibaa_logo_horizontal_fond_sombre.png" alt="KIBAA"><div class="sur"><i></i>NOUVEAU</div></header>
+<div class="top">
+ <div class="acc">Née au Burkina Faso, pour l'Afrique.</div>
+ <h1>KIBAA relie <em>20 pays.</em></h1>
+ <div class="exp">Discutez et vendez, d'un pays à l'autre.</div>
+</div>
+<div class="mapw"><svg id="map"></svg></div>
+<footer><div class="cta"><b>Téléchargez KIBAA.</b><span>Gratuit. « Kibaa » — parlons.</span></div><img class="badge" src="../../badge-google-play.png" alt="Disponible sur Google Play"></footer>
+<div class="ment">kibaa.online · Facebook @kibaa.online · TikTok @kibaa.app · YouTube @kibaa-app</div>
+</div>
+<script src="carte-dispo.js"></script>
+<script src="video/afrique.js"></script>
+<script>
+const f=new URLSearchParams(location.search).get('f')==='916',r=document.documentElement.style;
+r.setProperty('--h',f?'1920px':'1350px');r.setProperty('--k',f?'1.15':'1');r.setProperty('--pt',f?'250px':'70px');r.setProperty('--pb',f?'250px':'50px');
+const C=DISPO.countries.map(c=>({...c}));
+C.push({name:'Haïti',flag:'ht',d:AFRIQUE.haiti.d,b:null});
+// ordre : Burkina d'abord, puis alphabétique
+const coll=new Intl.Collator('fr');
+const L=[C.find(c=>c.flag==='bf'),...C.filter(c=>c.flag!=='bf').sort((a,b)=>coll.compare(a.name,b.name))];
+const COLS=5,ROWS=4,CW=200,CH=f?250:170,PW=150,PH=f?150:100;
+const svg=document.getElementById('map');svg.setAttribute('viewBox',`0 0 ${COLS*CW} ${ROWS*CH}`);
+let s='<defs><filter id="sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000" flood-opacity=".45"/></filter></defs>';
+// bbox réel de chaque tracé
+const tmp=document.createElementNS('http://www.w3.org/2000/svg','path');svg.appendChild(tmp);
+const P=L.map((c,i)=>{tmp.setAttribute('d',c.d);const bb=tmp.getBBox();const sc=Math.min(PW/bb.width,PH/bb.height);
+ const col=i%COLS,row=Math.floor(i/COLS),cx=col*CW+CW/2,cy=row*CH+CH/2-12;
+ return {c,i,sc,bb,cx,cy,tx:cx-(bb.x+bb.width/2)*sc,ty:cy-(bb.y+bb.height/2)*sc}});
+svg.removeChild(tmp);
+// liens : voisins de grille (droite, bas) + Burkina relié à tous
+let lines='';
+const ln=(A,B,hub)=>{const mx=(A.cx+B.cx)/2,my=(A.cy+B.cy)/2,dx=B.cx-A.cx,dy=B.cy-A.cy;const cx=mx-dy*.15,cy=my+dx*.15;
+ return `<path d="M${A.cx} ${A.cy-30}Q${cx} ${cy-30} ${B.cx} ${B.cy-30}" fill="none" stroke="${hub?'rgba(255,255,255,.35)':'rgba(233,248,239,.6)'}" stroke-width="${hub?1.6:2.4}" stroke-dasharray="${hub?'':'2 8'}" stroke-linecap="round"/>`};
+P.forEach((A,i)=>{if(i>0)lines+=ln(P[0],A,true)});
+P.forEach((A,i)=>{const c=i%COLS;if(c<COLS-1&&P[i+1])lines+=ln(A,P[i+1]);if(P[i+COLS])lines+=ln(A,P[i+COLS])});
+s+=`<g>${lines}</g>`;
+// pièces
+P.forEach(p=>{const{c,i,sc,bb,tx,ty}=p,bf=c.flag==='bf';
+ s+=`<g filter="url(#sh)" transform="translate(${tx},${ty}) scale(${sc})"><clipPath id="cp${i}"><path d="${c.d}"/></clipPath>
+ <image href="flags/${c.flag}.svg" x="${bb.x}" y="${bb.y}" width="${bb.width}" height="${bb.height}" preserveAspectRatio="xMidYMid slice" clip-path="url(#cp${i})"/>
+ <path d="${c.d}" fill="none" stroke="${bf?'#FACC15':'#FFFFFF'}" stroke-width="${(bf?4:2.2)/sc}" stroke-linejoin="round"/></g>`;
+ s+=`<text x="${p.cx}" y="${p.cy+PH/2+34}" text-anchor="middle" font-family="Inter" font-weight="${bf?800:700}" font-size="${bf?23:21}" fill="${bf?'#FFFFFF':'#D7EEE0'}">${c.name}</text>`;});
+// piquets
+const pin=(x,y,big)=>{const R=big?28:22,h=big?72:58;return `<g transform="translate(${x},${y})" filter="url(#sh)">
+ <path d="M0 0 C ${-R*.35} ${-h*.35} ${-R} ${-h+R*1.05} ${-R} ${-h+R} A ${R} ${R} 0 1 1 ${R} ${-h+R} C ${R} ${-h+R*1.05} ${R*.35} ${-h*.35} 0 0Z" fill="#fff" stroke="${big?'#FACC15':'#009E49'}" stroke-width="${big?4:3}"/>
+ <image href="../../logos/kibaa_symbole_couleur.png" x="${-R*.72}" y="${-h+R*.28}" width="${R*1.44}" height="${R*1.44}"/></g>`};
+P.forEach(p=>{s+=pin(p.cx,p.cy+8,p.c.flag==='bf')});
+svg.innerHTML=s;
+</script></body></html>
