@@ -5,6 +5,9 @@ Logos officiels (ne jamais redessiner ni recolorer) : `kibaa/logos/`.
 Badge Google Play officiel (FR) : `kibaa/badge-google-play.png` (ne jamais redessiner).
 Document interne : ne pas publier tel quel.
 
+## Cartes et drapeaux
+Cartes de l'Afrique fournies (aquaportail, Adobe Stock) = référence géographique seulement : filigranes et couleurs hors charte, ne jamais les intégrer. Pour les animations : carte en points blancs dessinée en code (voir `kibaa/campagnes/2026-11-ouverture-19-pays/video/video.html`) + drapeaux en emojis Noto (libres) dans des pastilles blanches ; Burkina en jaune et plus grand ; Haïti à part, hors carte.
+
 ## Marque
 - KIBAA = messagerie business née au Burkina Faso, éditée par **NTIC Solution** (Banfora, secteur 15, Tatana ; promoteur Kévin SANOU ; nticsolution.org).
 - « Kibaa » = « parlons » en bôbô. Signature : **« Kibaa » — parlons.**
