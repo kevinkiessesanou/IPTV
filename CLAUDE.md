@@ -2,6 +2,7 @@
 
 Source complète : `kibaa/KIBAA_Guide-de-marque_v2.0.pdf` (guide v2.0, 21 nov. 2026). En cas de doute, relire le PDF (sections 6, 7, 8 et 10 vieillissent vite).
 Logos officiels (ne jamais redessiner ni recolorer) : `kibaa/logos/`.
+Badge Google Play officiel (FR) : `kibaa/badge-google-play.png` (ne jamais redessiner).
 Document interne : ne pas publier tel quel.
 
 ## Marque
