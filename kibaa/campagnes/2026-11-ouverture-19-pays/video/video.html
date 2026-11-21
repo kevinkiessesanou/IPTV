@@ -28,14 +28,27 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
 .img{width:110px;height:110px;border-radius:24px;background:linear-gradient(135deg,#F7C873,#D9822B);flex:none}
 .btn{background:var(--vert);color:#fff;border-radius:18px;padding:16px 24px;font-weight:700;font-size:24px;text-align:center}
 #conf i{position:absolute;width:16px;height:26px;border-radius:4px}
+
+.w body{width:1920px;height:1080px}
+.w .t em{white-space:nowrap}
+.w .t.side{left:1040px!important;right:110px!important;text-align:left!important}
+.w #map{left:150px;top:90px}
+.w #t1{top:380px!important}.w #t2{top:380px!important}
+.w #logo{left:660px!important;top:140px!important}.w #t3{top:800px!important}
+.w #ph4{left:320px!important;top:40px!important}.w #p4{left:1380px!important;top:480px!important}
+.w #sig{left:330px!important;top:200px!important}.w #vo{left:160px!important;top:540px!important}.w #sent{left:160px!important;right:auto!important;width:680px;top:700px!important}
+.w #t5{top:380px!important}
+.w #k6{left:140px!important;top:200px!important}.w #t6{top:360px!important}
+.w #k7{left:170px!important;top:130px!important}.w #t7{top:420px!important}
+.w #lg8{left:735px!important;top:60px!important}.w #t8{top:530px!important}.w #bd8{left:730px!important;top:680px!important}.w #sig8{top:860px!important}.w #m8{top:975px!important}
 </style></head><body>
 <div id="bg"></div>
 
 <!-- 1-2 : carte -->
 <div class="s" id="s1">
  <svg id="map" width="864" height="900"></svg>
- <div class="t big" id="t1" style="top:290px">Née au <em>Burkina Faso.</em></div>
- <div class="t big" id="t2" style="top:1440px">Disponible<br>dans <em>20 pays.</em></div>
+ <div class="t big" id="t1" data-side style="top:290px">Née au <em>Burkina Faso.</em></div>
+ <div class="t big" id="t2" data-side style="top:1440px">Disponible<br>dans <em>20 pays.</em></div>
 </div>
 
 <!-- 3 : logo -->
@@ -68,7 +81,7 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
   <svg width="380" height="50" id="wave"></svg><span style="color:#2d5a41">0:12</span>
  </div>
  <div style="position:absolute;left:0;right:0;top:960px;text-align:center;color:var(--ment);font-weight:600;font-size:28px" id="sent">✓✓ Envoyé · une seule barre de réseau</div>
- <div class="t mid" id="t5" style="top:1180px">Fonctionne même avec une connexion <em>faible.</em></div>
+ <div class="t mid" id="t5" data-side style="top:1180px">Fonctionne même avec une connexion <em>faible.</em></div>
 </div>
 
 <!-- 6 : commerce -->
@@ -80,7 +93,7 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
   <div style="display:flex;gap:16px;margin-top:28px" id="i3"><div class="btn" style="flex:1">Commander · 5 000 F</div></div>
   <div style="margin-top:22px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:24px;color:var(--action)" id="i4">✓ Commande n° 0128 confirmée par le restaurant</div>
  </div>
- <div class="t mid" id="t6" style="top:1220px;font-size:84px">Tout votre commerce dans votre téléphone. <em>Gratuit.</em></div>
+ <div class="t mid" id="t6" data-side style="top:1220px;font-size:84px">Tout votre commerce dans votre téléphone. <em>Gratuit.</em></div>
 </div>
 
 <!-- 7 : livreur -->
@@ -97,7 +110,7 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
    <div class="av">IO</div><div style="flex:1"><div style="font-weight:800;font-size:26px">Ibrahim, votre livreur</div><div style="font-size:22px;color:#3c6b51" id="eta">Arrivée dans 8 min</div></div>
   </div>
  </div>
- <div class="t mid" id="t7" style="top:1240px">Suivez votre livreur sur la <em>carte.</em></div>
+ <div class="t mid" id="t7" data-side style="top:1240px">Suivez votre livreur sur la <em>carte.</em></div>
 </div>
 
 <!-- 8 : fin -->
@@ -111,6 +124,8 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
 </div>
 
 <script>
+const W=new URLSearchParams(location.search).get("f")==="169";if(W){document.documentElement.classList.add("w");document.querySelectorAll("[data-side]").forEach(e=>e.classList.add("side"))}
+
 const $=id=>document.getElementById(id);
 const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const ec=x=>1-Math.pow(1-cl(x),3);              // ease-out cubique
@@ -183,7 +198,7 @@ function render(t){
  up($('lg8'),t,27,.5);up($('t8'),t,27.3,.5);
  const bk=sp(p(t,27.6,.5));$('bd8').style.transform=`scale(${bk})`;$('bd8').style.opacity=cl(p(t,27.6,.15));
  up($('sig8'),t,28.1,.5);up($('m8'),t,28.4,.5);
- const tc=t-27.6;CF.forEach(c=>{if(tc<0){c.el.style.opacity=0;return}const x=540+c.vx*tc*.9+(c.x-540)*.15,y=1100+c.vy*tc+900*tc*tc;c.el.style.opacity=cl(1-(tc-1.6));c.el.style.transform=`translate(${x}px,${y}px) rotate(${c.r+tc*500}deg)`});
+ const tc=t-27.6;CF.forEach(c=>{if(tc<0){c.el.style.opacity=0;return}const x=(W?960:540)+c.vx*tc*.9+(c.x-540)*.15,y=(W?1000:1100)+c.vy*tc+900*tc*tc;c.el.style.opacity=cl(1-(tc-1.6));c.el.style.transform=`translate(${x}px,${y}px) rotate(${c.r+tc*500}deg)`});
 }
 window.render=render;render(0);
 </script></body></html>
