@@ -45,16 +45,18 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
 .w #k6{left:140px!important;top:200px!important}.w #t6{top:360px!important}
 .w #k7{left:170px!important;top:130px!important}.w #t7{top:420px!important}
 .w #lg8{left:735px!important;top:60px!important}.w #t8{top:530px!important}.w #bd8{left:730px!important;top:680px!important}.w #sig8{top:860px!important}.w #m8{top:975px!important}
+.t em{white-space:nowrap}
+#grid{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
+.w #grid{width:1920px;height:1080px}
+.w #t1,.w #t2{top:110px!important;font-size:96px}
 </style></head><body>
 <div id="bg"></div>
 
-<!-- 1-2 : carte puzzle -->
+<!-- 1-2 : les 20 pays, un par un, déposés en grille 5 x 4 -->
 <div class="s" id="s1">
- <svg id="map" viewBox="0 0 1000 1000"></svg>
- <div id="hti"><svg viewBox="-10 -10 170 130" width="170" height="130"><g id="htslot"></g><g id="htp"></g></svg><div>Haïti</div></div>
- <div id="cnt"><b id="cntn">1</b><span id="cntl">Burkina Faso</span></div>
- <div class="t big" id="t1" data-side style="top:250px">Née au <em>Burkina Faso.</em></div>
- <div class="t big" id="t2" data-side style="top:1390px">Disponible<br>dans <em>20 pays.</em></div>
+ <svg id="grid"></svg>
+ <div class="t big" id="t1" data-side style="top:300px">Née au <em>Burkina Faso.</em></div>
+ <div class="t big" id="t2" data-side style="top:300px">KIBAA relie <em>20 pays.</em></div>
 </div>
 
 <!-- 3 : logo -->
@@ -130,6 +132,7 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
 </div>
 
 <script src="afrique.js"></script>
+<script src="carte-dispo.js"></script>
 <script>
 const W=new URLSearchParams(location.search).get("f")==="169";if(W){document.documentElement.classList.add("w");document.querySelectorAll("[data-side]").forEach(e=>e.classList.add("side"))}
 
@@ -144,33 +147,32 @@ function up(el,t,a,d=.5){const k=ex(p(t,a,d));el.style.opacity=k;el.style.transf
 // visibilité de scène avec fondu d'entrée/sortie
 function scene(el,t,a,b,f=.3){el.style.opacity=Math.min(cl((t-a)/f),cl((b-t)/f))}
 
-// ── Carte d'Afrique découpée (Natural Earth, domaine public) + drapeaux flag-icons (MIT)
-const FR={'Burkina Faso':'Burkina Faso','Benin':'Bénin','Cameroon':'Cameroun','Congo':'Congo-Brazzaville',"Côte d'Ivoire":"Côte d'Ivoire",'Gabon':'Gabon','Gambia':'Gambie','Ghana':'Ghana','Guinea':'Guinée','Guinea-Bissau':'Guinée-Bissau','Libya':'Libye','Mali':'Mali','Morocco':'Maroc','Niger':'Niger','Nigeria':'Nigeria','Dem. Rep. Congo':'RD Congo','Senegal':'Sénégal','Chad':'Tchad','Togo':'Togo'};
-const A=AFRIQUE.countries;
-let base='',slots='',pcs='';
-let pseed=11;const prnd=()=>(pseed=(pseed*16807)%2147483647)/2147483647;
-const P=[];
-A.forEach((c,i)=>{
- if(!c.flag){base+=`<path d="${c.d}" fill="#007A38" stroke="#04331C" stroke-width="1.6" stroke-linejoin="round"/>`;return}
- const [x0,y0,x1,y1]=c.b,w=x1-x0,h=y1-y0;
- slots+=`<path d="${c.d}" fill="#04331C" stroke="rgba(233,248,239,.55)" stroke-width="2" stroke-dasharray="6 6"/>`;
- const bf=c.flag==='bf';
- pcs+=`<g id="pz${i}" style="transform-origin:${c.c[0]}px ${c.c[1]}px;transform-box:view-box"><clipPath id="cp${i}"><path d="${c.d}"/></clipPath>
-  <path d="${c.d}" fill="#000" opacity=".35" transform="translate(6,10)" id="sh${i}"/>
-  <image href="flags/${c.flag}.svg" x="${x0}" y="${y0}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" clip-path="url(#cp${i})"/>
-  <path d="${c.d}" fill="none" stroke="${bf?'#FACC15':'#FFFFFF'}" stroke-width="${bf?5:2.2}" stroke-linejoin="round"/></g>`;
- const ang=prnd()*Math.PI*2;
- P.push({i,name:FR[c.name],bf,lon:c.c[0],dx:Math.cos(ang)*(700+prnd()*300),dy:Math.sin(ang)*(700+prnd()*300),rot:(prnd()-.5)*70});
-});
-$('map').innerHTML=`<g>${base}</g><g>${slots}</g><g>${pcs}</g>`;
-const ht=AFRIQUE.haiti;
-$('htslot').innerHTML=`<path d="${ht.d}" fill="#04331C" stroke="rgba(233,248,239,.55)" stroke-width="2" stroke-dasharray="6 6"/>`;
-$('htp').innerHTML=`<clipPath id="cpht"><path d="${ht.d}"/></clipPath><image href="flags/ht.svg" x="0" y="0" width="150" height="110" preserveAspectRatio="xMidYMid slice" clip-path="url(#cpht)"/><path d="${ht.d}" fill="none" stroke="#fff" stroke-width="2.2"/>`;
-// ordre : Burkina d'abord, puis d'ouest en est
-const ORDP=[P.find(p=>p.bf),...P.filter(p=>!p.bf).sort((a,b)=>a.lon-b.lon)];
-ORDP.forEach((p,k)=>p.at=k===0?1.2:3.0+(k-1)*.42); // 18 pièces : 3,0 → 10,1 s
-const HT_AT=10.6;
-window.PUZZLE_TIMES=[...ORDP.map(p=>p.at),HT_AT];
+// ── Les 20 pays : formes Natural Earth (domaine public) + drapeaux flag-icons (MIT)
+const NS='http://www.w3.org/2000/svg';
+const G=(()=>{const C=DISPO.countries.map(c=>({...c}));C.push({name:'Haïti',flag:'ht',d:AFRIQUE.haiti.d});
+ const coll=new Intl.Collator('fr');return [C.find(c=>c.flag==='bf'),...C.filter(c=>c.flag!=='bf').sort((a,b)=>coll.compare(a.name,b.name))]})();
+const GEO=W?{vw:1920,vh:1080,ox:40,oy:70,cw:190,ch:236,pw:140,ph:120,bx:1450,by:600,bw:560,bh:400}
+           :{vw:1080,vh:1920,ox:40,oy:700,cw:200,ch:205,pw:150,ph:115,bx:540,by:1080,bw:640,bh:480};
+const gs=$('grid');gs.setAttribute('viewBox',`0 0 ${GEO.vw} ${GEO.vh}`);
+gs.innerHTML='<defs><filter id="gsh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000" flood-opacity=".45"/></filter></defs><g id="glinks"></g><rect id="gdim" x="0" y="0" width="'+GEO.vw+'" height="'+GEO.vh+'" fill="#04331C" opacity="0"/><g id="gpcs"></g>';
+const tmpP=document.createElementNS(NS,'path');gs.appendChild(tmpP);
+const PIN=(R,h,big)=>`<path d="M0 0 C ${-R*.35} ${-h*.35} ${-R} ${-h+R*1.05} ${-R} ${-h+R} A ${R} ${R} 0 1 1 ${R} ${-h+R} C ${R} ${-h+R*1.05} ${R*.35} ${-h*.35} 0 0Z" fill="#fff" stroke="${big?'#FACC15':'#009E49'}" stroke-width="${big?4:3}"/><image href="../../../logos/kibaa_symbole_couleur.png" x="${-R*.72}" y="${-h+R*.28}" width="${R*1.44}" height="${R*1.44}"/>`;
+const GP=G.map((c,i)=>{tmpP.setAttribute('d',c.d);const bb=tmpP.getBBox();const bf=c.flag==='bf';
+ const col=i%5,row=Math.floor(i/5),sx=GEO.ox+col*GEO.cw+GEO.cw/2,sy=GEO.oy+row*GEO.ch+GEO.ch/2-14;
+ const g=document.createElementNS(NS,'g');g.setAttribute('id','gp'+i);
+ g.innerHTML=`<g class="pc" filter="url(#gsh)"><clipPath id="gcp${i}"><path d="${c.d}"/></clipPath><image href="flags/${c.flag}.svg" x="${bb.x}" y="${bb.y}" width="${bb.width}" height="${bb.height}" preserveAspectRatio="xMidYMid slice" clip-path="url(#gcp${i})"/><path class="ol" d="${c.d}" fill="none" stroke="${bf?'#FACC15':'#fff'}" stroke-linejoin="round"/></g>
+  <g class="pin" filter="url(#gsh)">${PIN(bf?28:22,bf?72:58,bf)}</g>
+  <text class="bn" text-anchor="middle" font-family="Sora,Inter" font-weight="800" font-size="${W?66:72}" fill="#fff" letter-spacing="-2">${c.name}</text>
+  <text class="sn" text-anchor="middle" font-family="Inter" font-weight="${bf?800:700}" font-size="${bf?23:21}" fill="${bf?'#fff':'#D7EEE0'}">${c.name}</text>`;
+ $('gpcs').appendChild(g);
+ return {c,i,bf,bb,g,sx,sy,sS:Math.min(GEO.pw/bb.width,GEO.ph/bb.height),sB:Math.min(GEO.bw/bb.width,GEO.bh/bb.height),at:.6+3*i};});
+gs.removeChild(tmpP);
+// liens : voisins de grille + Burkina relié à tous
+{let l='';const ln=(A,B,hub)=>{const mx=(A.sx+B.sx)/2,my=(A.sy+B.sy)/2,dx=B.sx-A.sx,dy=B.sy-A.sy,cx=mx-dy*.15,cy=my+dx*.15;
+  return `<path class="lk" d="M${A.sx} ${A.sy-30}Q${cx} ${cy-30} ${B.sx} ${B.sy-30}" fill="none" stroke="${hub?'rgba(255,255,255,.4)':'rgba(233,248,239,.65)'}" stroke-width="${hub?1.8:2.6}" stroke-linecap="round" pathLength="100"/>`};
+ GP.forEach((A,i)=>{if(i)l+=ln(GP[0],A,true)});GP.forEach((A,i)=>{if(i%5<4&&GP[i+1])l+=ln(A,GP[i+1]);if(GP[i+5])l+=ln(A,GP[i+5])});$('glinks').innerHTML=l;}
+const GRID_END=.6+3*20; // 60,6 s
+window.PUZZLE_TIMES=GP.map(p=>p.at);
 
 // ── onde vocale
 let w='';for(let i=0;i<38;i++){const h=8+Math.abs(Math.sin(i*1.7)*30+Math.sin(i*.6)*10);w+=`<rect x="${i*10}" y="${25-h/2}" width="6" height="${h}" rx="3" fill="#007A38" id="w${i}"/>`}$('wave').innerHTML=w;
@@ -180,19 +182,30 @@ const CF=[];let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
 for(let i=0;i<70;i++){const el=document.createElement('i');el.style.background=['#009E49','#FACC15','#FFFFFF'][i%3];$('conf').appendChild(el);CF.push({el,x:rnd()*1080,vx:(rnd()-.5)*500,vy:-900-rnd()*700,r:rnd()*720})}
 
 function render(t){
- // 1 + 2 : carte puzzle (0–14 s)
- scene($('s1'),t,0,14.1,.3);
- $('map').style.opacity=ec(p(t,0,.8));
- ORDP.forEach(pc=>{const g=$('pz'+pc.i),k=p(t,pc.at,.75),e=ec(k),sc=1+.35*(1-sp(k));
-  g.style.opacity=cl(p(t,pc.at,.15));
-  g.style.transform=`translate(${pc.dx*(1-e)}px,${pc.dy*(1-e)}px) rotate(${pc.rot*(1-e)}deg) scale(${sc})`;
-  $('sh'+pc.i).style.opacity=.35*(1-cl(k));});
- {const k=p(t,HT_AT,.75),e=ec(k);$('htp').style.opacity=cl(p(t,HT_AT,.15));$('htp').setAttribute('transform',`translate(${-300*(1-e)},${-200*(1-e)}) rotate(${30*(1-e)} 75 55)`);$('hti').style.opacity=ec(p(t,.4,.6));}
- let n=0,last='';ORDP.forEach(pc=>{if(t>=pc.at+.5){n++;last=pc.name}});if(t>=HT_AT+.5){n++;last='Haïti'}
- $('cnt').style.opacity=t<1.7?0:Math.min(1,cl((11.6-t)/.4));$('cntn').textContent=n;$('cntl').textContent=n<=1?'pays · '+last:'pays · '+last;
- up($('t1'),t,.5);$('t1').style.opacity*=cl((3-t)/.4);
- up($('t2'),t,11.6);
- t-=9; // les plans suivants sont décalés de 9 s
+ // 1 + 2 : les 20 pays (0–64 s)
+ scene($('s1'),t,0,64.1,.3);
+ $('gdim').setAttribute('opacity',(t>.4&&t<GRID_END)?.55*Math.min(cl((t-.4)/.4),cl((GRID_END-t)/.4)):0);
+ GP.forEach(Q=>{const a=Q.at,g=Q.g,pc=g.querySelector('.pc'),pin=g.querySelector('.pin'),bn=g.querySelector('.bn'),sn=g.querySelector('.sn');
+  if(t<a){g.style.opacity=0;return}g.style.opacity=1;
+  const kin=sp(p(t,a,.6)),km=ec(p(t,a+2.3,.7));        // entrée en grand, puis dépôt
+  const sc=(Q.sB*Math.max(kin,.001))*(1-km)+Q.sS*km, x=GEO.bx*(1-km)+Q.sx*km, y=GEO.by*(1-km)+Q.sy*km;
+  const rot=(1-ec(p(t,a,.6)))*-25*(Q.i%2?1:-1);
+  const cx=Q.bb.x+Q.bb.width/2,cy=Q.bb.y+Q.bb.height/2;
+  pc.setAttribute('transform',`translate(${x},${y}) rotate(${rot}) scale(${sc}) translate(${-cx},${-cy})`);
+  pc.querySelector('.ol').setAttribute('stroke-width',(Q.bf?4:2.4)/sc);
+  const pk=sp(p(t,a+.7,.5)),ps=(2-km)*Math.max(pk,.001),pdy=(1-ec(p(t,a+.7,.4)))*-160;
+  pin.setAttribute('transform',`translate(${x},${y+8*km+pdy}) scale(${ps})`);pin.style.opacity=cl(p(t,a+.7,.12));
+  const bigH=Q.bb.height*Q.sB;bn.setAttribute('x',GEO.bx);bn.setAttribute('y',GEO.by+bigH/2+100-(1-ex(p(t,a+.35,.5)))*-28);
+  bn.style.opacity=ex(p(t,a+.35,.5))*cl((a+2.4-t)/.25);
+  sn.setAttribute('x',Q.sx);sn.setAttribute('y',Q.sy+GEO.ph/2+34);sn.style.opacity=cl(p(t,a+2.85,.3));
+});
+ // remettre l'ordre : pièce active au premier plan
+ {const act=GP.filter(p=>t>=p.at&&t<p.at+3.1);act.forEach(p=>p.g.parentNode.appendChild(p.g));}
+ document.querySelectorAll('.lk').forEach(e=>{const k=ec(p(t,GRID_END,1.4));e.style.strokeDasharray=`${k*100} 100`;});
+ up($('t1'),t,.5);$('t1').style.opacity*=cl((3.2-t)/.4);
+ up($('t2'),t,GRID_END+.4);
+ t-=59; // les plans suivants sont décalés de 59 s
+
  // 3 : logo (5–7 s)
  scene($('s3'),t,5,7.15,.3);
  const lk=ex(p(t,5.1,.7));$('logo').style.transform=`scale(${.95+.05*lk})`;$('logo').style.opacity=lk;
