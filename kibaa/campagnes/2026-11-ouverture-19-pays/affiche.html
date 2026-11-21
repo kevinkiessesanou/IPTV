@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&family=Inter:wght@500;600;800;900&display=block" rel="stylesheet">
+<style>
+:root{--vert:#009E49;--action:#007A38;--jaune:#FACC15;--profond:#04331C;--brume:#E9F8EF;--para:#D7EEE0;--ment:#CFEBDA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:var(--h);overflow:hidden;font-family:Inter,sans-serif;color:#fff;background:var(--profond)}
+.page{position:relative;width:1080px;height:var(--h);padding:var(--pt) 70px var(--pb);display:flex;flex-direction:column;
+ background:radial-gradient(circle at 50% 58%,rgba(0,158,73,.55),rgba(4,51,28,0) 62%),var(--profond)}
+.page:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 2px,transparent 2.5px);background-size:40px 40px;pointer-events:none}
+header{display:flex;justify-content:space-between;align-items:center;position:relative}
+header img{height:64px}
+.sur{display:flex;align-items:center;gap:14px;color:var(--jaune);font-weight:800;font-size:23px;letter-spacing:.2em}
+.sur i{width:44px;height:6px;border-radius:3px;background:var(--jaune);display:block}
+.main{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;position:relative;gap:calc(26px*var(--k))}
+.acc{font-weight:600;font-size:calc(30px*var(--k));color:var(--para)}
+h1{font-family:Sora,'Inter Display',sans-serif;font-weight:800;font-size:calc(112px*var(--k));line-height:.98;letter-spacing:-.045em}
+h1 em{font-style:normal;color:var(--jaune)}
+.exp{font-weight:500;font-size:calc(31px*var(--k));line-height:1.4;color:var(--para);max-width:880px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:920px;margin-top:8px}
+.chip{display:flex;align-items:center;gap:9px;padding:calc(11px*var(--k)) 20px;border-radius:16px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.18);font-weight:600;font-size:calc(23px*var(--k))}
+.chip:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--vert)}
+.chip.bf{background:#fff;color:var(--profond);font-weight:800}
+.chip.bf:before{background:var(--vert)}
+.ben{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:900px}
+.b{background:#fff;color:var(--profond);border-radius:22px;padding:calc(18px*var(--k)) 22px;display:flex;align-items:center;gap:14px;text-align:left;font-weight:600;font-size:calc(24px*var(--k));line-height:1.25}
+.b svg{flex:none;width:40px;height:40px;stroke:var(--vert);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+footer{display:flex;justify-content:space-between;align-items:center;position:relative}
+.cta b{display:block;font-weight:900;font-size:calc(36px*var(--k))}
+.cta span{font-weight:600;font-size:calc(25px*var(--k));color:var(--para)}
+.badge{height:76px}
+.badge.ph{width:236px;border:2px dashed rgba(255,255,255,.5);border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:17px;color:var(--ment)}
+.ment{position:relative;text-align:center;font-weight:600;font-size:21px;color:var(--ment);margin-top:22px}
+</style></head><body>
+<div class="page">
+<header><img src="../../logos/kibaa_logo_horizontal_fond_sombre.png" alt="KIBAA"><div class="sur"><i></i>NOUVEAU</div></header>
+<div class="main">
+ <div class="acc">Née au Burkina Faso, pour l'Afrique.</div>
+ <h1>Disponible<br>dans <em>20 pays.</em></h1>
+ <div class="exp">Discutez en toute discrétion, même avec une petite connexion. Commerçants : gérez tout votre commerce, gratuitement.</div>
+ <div class="ben">
+  <div class="b"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Votre numéro n'est jamais montré</div>
+  <div class="b"><svg viewBox="0 0 24 24"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8"/></svg>Fonctionne même en connexion faible</div>
+  <div class="b"><svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>Catalogue, commandes, factures : gratuit</div>
+  <div class="b"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Suivez votre livreur sur la carte</div>
+ </div>
+ <div class="chips" id="c"></div>
+</div>
+<footer><div class="cta"><b>Téléchargez KIBAA.</b><span>Gratuit. « Kibaa » — parlons.</span></div><div id="bd"></div></footer>
+<div class="ment">kibaa.online · Facebook @kibaa.online · TikTok @kibaa.app · YouTube @kibaa-app</div>
+</div>
+<script>
+const f=new URLSearchParams(location.search).get('f')==='916';
+const r=document.documentElement.style;
+r.setProperty('--h',f?'1920px':'1350px');r.setProperty('--k',f?'1.15':'1');
+r.setProperty('--pt',f?'250px':'70px');r.setProperty('--pb',f?'250px':'50px');
+const P=['Burkina Faso','Bénin','Cameroun','Congo-Brazzaville',"Côte d'Ivoire",'Gabon','Gambie','Ghana','Guinée','Guinée-Bissau','Haïti','Libye','Mali','Maroc','Niger','Nigeria','RD Congo','Sénégal','Tchad','Togo'];
+document.getElementById('c').innerHTML=P.map((p,i)=>`<span class="chip${i?'':' bf'}">${p}</span>`).join('');
+// Badge officiel : déposer kibaa/badge-google-play.png (jamais redessiné)
+const img=new Image();img.className='badge';img.alt='Disponible sur Google Play';
+img.onload=()=>document.getElementById('bd').appendChild(img);
+img.onerror=()=>document.getElementById('bd').innerHTML='<div class="badge ph">Badge Google Play<br>officiel ici</div>';
+img.src='../../badge-google-play.png';
+</script></body></html>
