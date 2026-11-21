@@ -6,7 +6,8 @@ Badge Google Play officiel (FR) : `kibaa/badge-google-play.png` (ne jamais redes
 Document interne : ne pas publier tel quel.
 
 ## Cartes et drapeaux
-Cartes de l'Afrique fournies (aquaportail, Adobe Stock) = référence géographique seulement : filigranes et couleurs hors charte, ne jamais les intégrer. Pour les animations : carte en points blancs dessinée en code (voir `kibaa/campagnes/2026-11-ouverture-19-pays/video/video.html`) + drapeaux en emojis Noto (libres) dans des pastilles blanches ; Burkina en jaune et plus grand ; Haïti à part, hors carte.
+Cartes fournies par l'utilisateur (aquaportail, Adobe Stock) = référence visuelle seulement (filigranes, droits) : ne jamais les intégrer.
+Style validé : **carte puzzle**. Vrais contours Natural Earth (domaine public, `world-atlas` + `d3-geo`), pays non disponibles en Vert Action `#007A38` bordés de vert profond ; pays disponibles = pièces au drapeau (flag-icons, MIT) qui arrivent en tournant et s'emboîtent dans leur emplacement en pointillés ; Burkina en premier, contour jaune ; Haïti en encart ; compteur « n pays · Nom ». Maroc dessiné avec le Sahara occidental (choix à confirmer). Données prêtes : `kibaa/campagnes/2026-11-ouverture-19-pays/video/afrique.js` + `flags/`.
 
 ## Marque
 - KIBAA = messagerie business née au Burkina Faso, éditée par **NTIC Solution** (Banfora, secteur 15, Tatana ; promoteur Kévin SANOU ; nticsolution.org).

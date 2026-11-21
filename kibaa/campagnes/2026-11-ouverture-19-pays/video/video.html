@@ -12,7 +12,11 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
 .t em{font-style:normal;color:var(--jaune)}
 .big{font-size:120px}.mid{font-size:92px}
 .sub{position:absolute;left:90px;right:90px;text-align:center;font-weight:500;font-size:38px;line-height:1.4;color:var(--para)}
-#map{position:absolute;left:108px;top:470px}
+#map{position:absolute;left:90px;top:470px;width:900px;height:900px;overflow:visible}
+#hti{position:absolute;left:60px;top:1060px;text-align:center;font-weight:700;font-size:24px;color:var(--ment)}
+#hti svg{overflow:visible}
+#cnt{position:absolute;left:0;right:0;top:1330px;display:flex;justify-content:center;align-items:baseline;gap:18px;font-weight:700;font-size:34px;color:var(--para)}
+#cnt b{font-family:Sora,sans-serif;font-weight:800;font-size:56px;color:var(--jaune);min-width:70px;text-align:right}
 .phone{position:absolute;left:250px;width:580px;height:1000px;border-radius:64px;background:#0b1f15;padding:16px;box-shadow:0 40px 90px rgba(0,0,0,.45)}
 .scr{width:100%;height:100%;border-radius:50px;background:#F4F7F5;overflow:hidden;position:relative;color:#0d1f16}
 .bar{height:120px;background:var(--vert);color:#fff;display:flex;align-items:flex-end;gap:16px;padding:0 26px 20px}
@@ -32,8 +36,8 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
 .w body{width:1920px;height:1080px}
 .w .t em{white-space:nowrap}
 .w .t.side{left:1040px!important;right:110px!important;text-align:left!important}
-.w #map{left:150px;top:90px}
-.w #t1{top:380px!important}.w #t2{top:380px!important}
+.w #map{left:110px;top:60px;width:900px;height:900px}.w #hti{left:40px!important;top:700px!important}.w #cnt{left:1040px;right:auto;top:760px;justify-content:flex-start}
+.w #t1{top:330px!important}.w #t2{top:330px!important}
 .w #logo{left:660px!important;top:140px!important}.w #t3{top:800px!important}
 .w #ph4{left:320px!important;top:40px!important}.w #p4{left:1380px!important;top:480px!important}
 .w #sig{left:330px!important;top:200px!important}.w #vo{left:160px!important;top:540px!important}.w #sent{left:160px!important;right:auto!important;width:680px;top:700px!important}
@@ -44,11 +48,13 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
 </style></head><body>
 <div id="bg"></div>
 
-<!-- 1-2 : carte -->
+<!-- 1-2 : carte puzzle -->
 <div class="s" id="s1">
- <svg id="map" width="864" height="900"></svg>
- <div class="t big" id="t1" data-side style="top:290px">Née au <em>Burkina Faso.</em></div>
- <div class="t big" id="t2" data-side style="top:1440px">Disponible<br>dans <em>20 pays.</em></div>
+ <svg id="map" viewBox="0 0 1000 1000"></svg>
+ <div id="hti"><svg viewBox="-10 -10 170 130" width="170" height="130"><g id="htslot"></g><g id="htp"></g></svg><div>Haïti</div></div>
+ <div id="cnt"><b id="cntn">1</b><span id="cntl">Burkina Faso</span></div>
+ <div class="t big" id="t1" data-side style="top:250px">Née au <em>Burkina Faso.</em></div>
+ <div class="t big" id="t2" data-side style="top:1390px">Disponible<br>dans <em>20 pays.</em></div>
 </div>
 
 <!-- 3 : logo -->
@@ -123,6 +129,7 @@ body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;col
  <div id="conf"></div>
 </div>
 
+<script src="afrique.js"></script>
 <script>
 const W=new URLSearchParams(location.search).get("f")==="169";if(W){document.documentElement.classList.add("w");document.querySelectorAll("[data-side]").forEach(e=>e.classList.add("side"))}
 
@@ -137,17 +144,33 @@ function up(el,t,a,d=.5){const k=ex(p(t,a,d));el.style.opacity=k;el.style.transf
 // visibilité de scène avec fondu d'entrée/sortie
 function scene(el,t,a,b,f=.3){el.style.opacity=Math.min(cl((t-a)/f),cl((b-t)/f))}
 
-// ── Carte d'Afrique en points
-const AF=[[-17.1,21],[-16,24],[-13,27.7],[-9.8,29.5],[-9.5,32.5],[-6,35.8],[-2,35.1],[3,36.8],[10,37.3],[11,35],[10.5,33.5],[15,32.3],[20,30.5],[20,32.6],[23,32.6],[25,31.6],[29,30.9],[32.3,31.3],[34.2,28],[35.5,24],[37.3,21],[38.5,18],[39.5,15.5],[43.3,12.5],[44,10.5],[51.2,11.9],[51,10.4],[49,6],[46,2],[42,-1],[40,-3.5],[39,-6.5],[40.4,-10.5],[40.6,-15],[36.5,-19],[35.3,-22],[32.9,-25.9],[32.5,-28.5],[30.5,-31],[27.5,-33.5],[25,-34],[20,-34.8],[18.3,-33.9],[17,-29],[15,-26.5],[14.4,-22.5],[12,-18],[11.8,-15.5],[13.5,-11],[12.2,-6],[9,-1.5],[9.5,1],[9.6,3.9],[8.5,4.5],[6,4.3],[4.5,6.3],[1.5,6.1],[-2,4.7],[-4.5,5.2],[-7.5,4.4],[-11,6.8],[-13.3,8.5],[-15,10.9],[-16.7,12.4],[-17.5,14.7],[-16.5,16.5],[-16,19]],MG=[[44,-25],[43.3,-22],[44,-17],[46.3,-15.7],[49.3,-12],[50.5,-15.5],[47.2,-25]];
-const K=12,X=lo=>(lo+20)*K,Y=la=>(38-la)*K;
-const inP=(P,x,y)=>{let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,yi]=[X(P[i][0]),Y(P[i][1])],[xj,yj]=[X(P[j][0]),Y(P[j][1])];if((yi>y)!=(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)c=!c}return c};const inside=(x,y)=>inP(AF,x,y)||inP(MG,x,y);
-let dots='';for(let y=10;y<900;y+=20)for(let x=10;x<864;x+=20)if(inside(x,y))dots+=`<circle cx="${x}" cy="${y}" r="4.5" fill="rgba(255,255,255,.24)"/>`;
-const C=[['Burkina Faso','🇧🇫',-1.5,12.4],['Gambie','🇬🇲',-16.6,13.5],['Sénégal','🇸🇳',-17.4,14.7],['Guinée-Bissau','🇬🇼',-15.6,11.9],['Guinée','🇬🇳',-13.7,9.5],['Mali','🇲🇱',-8,12.6],['Maroc','🇲🇦',-6.8,34],["Côte d'Ivoire","🇨🇮",-4,5.4],['Ghana','🇬🇭',-.2,5.6],['Togo','🇹🇬',1.2,6.1],['Bénin','🇧🇯',2.6,6.5],['Niger','🇳🇪',2.1,13.5],['Nigeria','🇳🇬',7.5,9.1],['Libye','🇱🇾',13.2,32.9],['Gabon','🇬🇦',9.5,.4],['Cameroun','🇨🇲',11.5,3.9],['Tchad','🇹🇩',15,12.1],['Congo-Brazzaville','🇨🇬',13.5,-3.5],['RD Congo','🇨🇩',23,-3]];
-let cs=C.map((c,i)=>`<g id="c${i}" data-x="${X(c[2])}" data-y="${Y(c[3])}" transform="translate(${X(c[2])},${Y(c[3])})"><circle r="${i?22:30}" fill="#fff" stroke="${i?'#009E49':'#FACC15'}" stroke-width="${i?3:5}"/><text y="${i?9:12}" font-size="${i?26:36}" text-anchor="middle">${c[1]}</text><circle id="h${i}" r="22" fill="none" stroke="${i?'#009E49':'#FACC15'}" stroke-width="4"/></g>`).join('');
-// Haïti, hors carte : pastille à gauche
-cs+=`<g id="c19" data-x="40" data-y="560" transform="translate(40,560)"><circle r="22" fill="#fff" stroke="#009E49" stroke-width="3"/><text y="9" font-size="26" text-anchor="middle">🇭🇹</text><circle id="h19" r="22" fill="none" stroke="#009E49" stroke-width="4"/><text x="0" y="52" font-size="22" font-weight="700" fill="#CFEBDA" text-anchor="middle" font-family="Inter">Haïti</text></g>`;
-$('map').innerHTML=dots+cs;
-const ORD=[...C.keys(),19].slice(1).sort((a,b)=>(a===19?-30:C[a][2])-(b===19?-30:C[b][2])); // cascade ouest → est
+// ── Carte d'Afrique découpée (Natural Earth, domaine public) + drapeaux flag-icons (MIT)
+const FR={'Burkina Faso':'Burkina Faso','Benin':'Bénin','Cameroon':'Cameroun','Congo':'Congo-Brazzaville',"Côte d'Ivoire":"Côte d'Ivoire",'Gabon':'Gabon','Gambia':'Gambie','Ghana':'Ghana','Guinea':'Guinée','Guinea-Bissau':'Guinée-Bissau','Libya':'Libye','Mali':'Mali','Morocco':'Maroc','Niger':'Niger','Nigeria':'Nigeria','Dem. Rep. Congo':'RD Congo','Senegal':'Sénégal','Chad':'Tchad','Togo':'Togo'};
+const A=AFRIQUE.countries;
+let base='',slots='',pcs='';
+let pseed=11;const prnd=()=>(pseed=(pseed*16807)%2147483647)/2147483647;
+const P=[];
+A.forEach((c,i)=>{
+ if(!c.flag){base+=`<path d="${c.d}" fill="#007A38" stroke="#04331C" stroke-width="1.6" stroke-linejoin="round"/>`;return}
+ const [x0,y0,x1,y1]=c.b,w=x1-x0,h=y1-y0;
+ slots+=`<path d="${c.d}" fill="#04331C" stroke="rgba(233,248,239,.55)" stroke-width="2" stroke-dasharray="6 6"/>`;
+ const bf=c.flag==='bf';
+ pcs+=`<g id="pz${i}" style="transform-origin:${c.c[0]}px ${c.c[1]}px;transform-box:view-box"><clipPath id="cp${i}"><path d="${c.d}"/></clipPath>
+  <path d="${c.d}" fill="#000" opacity=".35" transform="translate(6,10)" id="sh${i}"/>
+  <image href="flags/${c.flag}.svg" x="${x0}" y="${y0}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" clip-path="url(#cp${i})"/>
+  <path d="${c.d}" fill="none" stroke="${bf?'#FACC15':'#FFFFFF'}" stroke-width="${bf?5:2.2}" stroke-linejoin="round"/></g>`;
+ const ang=prnd()*Math.PI*2;
+ P.push({i,name:FR[c.name],bf,lon:c.c[0],dx:Math.cos(ang)*(700+prnd()*300),dy:Math.sin(ang)*(700+prnd()*300),rot:(prnd()-.5)*70});
+});
+$('map').innerHTML=`<g>${base}</g><g>${slots}</g><g>${pcs}</g>`;
+const ht=AFRIQUE.haiti;
+$('htslot').innerHTML=`<path d="${ht.d}" fill="#04331C" stroke="rgba(233,248,239,.55)" stroke-width="2" stroke-dasharray="6 6"/>`;
+$('htp').innerHTML=`<clipPath id="cpht"><path d="${ht.d}"/></clipPath><image href="flags/ht.svg" x="0" y="0" width="150" height="110" preserveAspectRatio="xMidYMid slice" clip-path="url(#cpht)"/><path d="${ht.d}" fill="none" stroke="#fff" stroke-width="2.2"/>`;
+// ordre : Burkina d'abord, puis d'ouest en est
+const ORDP=[P.find(p=>p.bf),...P.filter(p=>!p.bf).sort((a,b)=>a.lon-b.lon)];
+ORDP.forEach((p,k)=>p.at=k===0?1.2:3.0+(k-1)*.42); // 18 pièces : 3,0 → 10,1 s
+const HT_AT=10.6;
+window.PUZZLE_TIMES=[...ORDP.map(p=>p.at),HT_AT];
 
 // ── onde vocale
 let w='';for(let i=0;i<38;i++){const h=8+Math.abs(Math.sin(i*1.7)*30+Math.sin(i*.6)*10);w+=`<rect x="${i*10}" y="${25-h/2}" width="6" height="${h}" rx="3" fill="#007A38" id="w${i}"/>`}$('wave').innerHTML=w;
@@ -157,15 +180,19 @@ const CF=[];let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
 for(let i=0;i<70;i++){const el=document.createElement('i');el.style.background=['#009E49','#FACC15','#FFFFFF'][i%3];$('conf').appendChild(el);CF.push({el,x:rnd()*1080,vx:(rnd()-.5)*500,vy:-900-rnd()*700,r:rnd()*720})}
 
 function render(t){
- // 1 + 2 : carte (0–5 s)
- scene($('s1'),t,0,5.1,.25);
- const m=$('map');m.style.opacity=ec(p(t,0,.5));
- for(let i=0;i<20;i++){const g=$('c'+i);let a;
-  if(i===0)a=.2;else a=2.2+ORD.indexOf(i)*.11;
-  const k=sp(p(t,a,.35));g.style.opacity=cl(p(t,a,.12));g.setAttribute('transform',`translate(${g.dataset.x},${g.dataset.y}) scale(${Math.max(k,0.001)})`);
-  const h=$('h'+i),ph=((t-a)%1.2)/1.2;h.setAttribute('r',18+ph*30);h.style.opacity=t>a?(1-ph)*.8:0}
- up($('t1'),t,.5);$('t1').style.opacity*=cl((2.3-t)/.3);
- up($('t2'),t,2.6);
+ // 1 + 2 : carte puzzle (0–14 s)
+ scene($('s1'),t,0,14.1,.3);
+ $('map').style.opacity=ec(p(t,0,.8));
+ ORDP.forEach(pc=>{const g=$('pz'+pc.i),k=p(t,pc.at,.75),e=ec(k),sc=1+.35*(1-sp(k));
+  g.style.opacity=cl(p(t,pc.at,.15));
+  g.style.transform=`translate(${pc.dx*(1-e)}px,${pc.dy*(1-e)}px) rotate(${pc.rot*(1-e)}deg) scale(${sc})`;
+  $('sh'+pc.i).style.opacity=.35*(1-cl(k));});
+ {const k=p(t,HT_AT,.75),e=ec(k);$('htp').style.opacity=cl(p(t,HT_AT,.15));$('htp').setAttribute('transform',`translate(${-300*(1-e)},${-200*(1-e)}) rotate(${30*(1-e)} 75 55)`);$('hti').style.opacity=ec(p(t,.4,.6));}
+ let n=0,last='';ORDP.forEach(pc=>{if(t>=pc.at+.5){n++;last=pc.name}});if(t>=HT_AT+.5){n++;last='Haïti'}
+ $('cnt').style.opacity=t<1.7?0:Math.min(1,cl((11.6-t)/.4));$('cntn').textContent=n;$('cntl').textContent=n<=1?'pays · '+last:'pays · '+last;
+ up($('t1'),t,.5);$('t1').style.opacity*=cl((3-t)/.4);
+ up($('t2'),t,11.6);
+ t-=9; // les plans suivants sont décalés de 9 s
  // 3 : logo (5–7 s)
  scene($('s3'),t,5,7.15,.3);
  const lk=ex(p(t,5.1,.7));$('logo').style.transform=`scale(${.95+.05*lk})`;$('logo').style.opacity=lk;
