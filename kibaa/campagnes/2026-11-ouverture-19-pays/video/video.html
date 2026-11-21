@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&family=Inter:wght@500;600;700;800;900&display=block" rel="stylesheet">
+<style>
+:root{--vert:#009E49;--action:#007A38;--jaune:#FACC15;--profond:#04331C;--brume:#E9F8EF;--para:#D7EEE0;--ment:#CFEBDA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;color:#fff;background:var(--profond)}
+#bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(0,158,73,.5),rgba(4,51,28,0) 60%),var(--profond)}
+#bg:after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 2px,transparent 2.5px);background-size:40px 40px}
+.s{position:absolute;inset:0;opacity:0}
+.t{position:absolute;left:70px;right:70px;text-align:center;font-family:Sora,'Inter Display',sans-serif;font-weight:800;letter-spacing:-.045em;line-height:1}
+.t em{font-style:normal;color:var(--jaune)}
+.big{font-size:120px}.mid{font-size:92px}
+.sub{position:absolute;left:90px;right:90px;text-align:center;font-weight:500;font-size:38px;line-height:1.4;color:var(--para)}
+#map{position:absolute;left:108px;top:470px}
+.phone{position:absolute;left:250px;width:580px;height:1000px;border-radius:64px;background:#0b1f15;padding:16px;box-shadow:0 40px 90px rgba(0,0,0,.45)}
+.scr{width:100%;height:100%;border-radius:50px;background:#F4F7F5;overflow:hidden;position:relative;color:#0d1f16}
+.bar{height:120px;background:var(--vert);color:#fff;display:flex;align-items:flex-end;gap:16px;padding:0 26px 20px}
+.av{width:56px;height:56px;border-radius:50%;background:var(--brume);color:var(--action);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;flex:none}
+.bar b{font-size:26px;display:block}.bar small{font-size:18px;opacity:.85}
+.msg{position:absolute;max-width:400px;padding:18px 22px;border-radius:30px;font-size:24px;line-height:1.35;font-weight:500;box-shadow:0 4px 14px rgba(0,0,0,.07)}
+.in{left:24px;background:#fff;border-bottom-left-radius:8px}
+.out{right:24px;background:#D6F5E2;border-bottom-right-radius:8px}
+.pill{position:absolute;left:50%;display:flex;align-items:center;gap:14px;padding:22px 34px;border-radius:999px;background:var(--jaune);color:var(--profond);font-weight:800;font-size:34px;white-space:nowrap;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.pill svg{width:40px;height:40px;stroke:var(--profond);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.card{position:absolute;background:#fff;color:var(--profond);border-radius:40px;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.item{display:flex;gap:20px;align-items:center;padding:22px 0;border-bottom:1px solid #E3EEE7}
+.img{width:110px;height:110px;border-radius:24px;background:linear-gradient(135deg,#F7C873,#D9822B);flex:none}
+.btn{background:var(--vert);color:#fff;border-radius:18px;padding:16px 24px;font-weight:700;font-size:24px;text-align:center}
+#conf i{position:absolute;width:16px;height:26px;border-radius:4px}
+</style></head><body>
+<div id="bg"></div>
+
+<!-- 1-2 : carte -->
+<div class="s" id="s1">
+ <svg id="map" width="864" height="900"></svg>
+ <div class="t big" id="t1" style="top:290px">Née au <em>Burkina Faso.</em></div>
+ <div class="t big" id="t2" style="top:1440px">Disponible<br>dans <em>20 pays.</em></div>
+</div>
+
+<!-- 3 : logo -->
+<div class="s" id="s3">
+ <img id="logo" src="../../../logos/kibaa_logo_vertical_fond_sombre.png" style="position:absolute;left:240px;top:560px;width:600px">
+ <div class="t mid" id="t3" style="top:1270px">Discuter. Vendre.</div>
+</div>
+
+<!-- 4 : vie privée -->
+<div class="s" id="s4">
+ <div class="phone" id="ph4" style="top:330px"><div class="scr">
+  <div class="bar"><div class="av">FD</div><div><b>Fatou Diallo</b><small>Dakar · en ligne</small></div></div>
+  <div class="msg in" id="m1" style="top:170px">Bonjour Awa ! Tu es aussi sur KIBAA ? 😊</div>
+  <div class="msg out" id="m2" style="top:300px">Oui ! Et personne ne voit mon numéro 🔒</div>
+  <div class="msg in" id="m3" style="top:430px">Parfait, on discute ici alors.</div>
+ </div></div>
+ <div class="pill" id="p4" style="top:1400px"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Votre numéro n'est jamais montré.</div>
+</div>
+
+<!-- 5 : connexion faible -->
+<div class="s" id="s5">
+ <svg id="sig" viewBox="0 0 200 160" style="position:absolute;left:390px;top:400px;width:300px">
+  <rect x="10" y="120" width="30" height="30" rx="6" fill="#FFFFFF"/>
+  <rect x="60" y="85" width="30" height="65" rx="6" fill="rgba(255,255,255,.18)"/>
+  <rect x="110" y="50" width="30" height="100" rx="6" fill="rgba(255,255,255,.18)"/>
+  <rect x="160" y="15" width="30" height="135" rx="6" fill="rgba(255,255,255,.18)"/>
+ </svg>
+ <div class="msg out" id="vo" style="right:auto;left:200px;top:780px;width:680px;max-width:none;display:flex;align-items:center;gap:20px;font-size:28px;padding:26px 30px">
+  <div class="av" style="background:var(--vert);color:#fff">▶</div>
+  <svg width="380" height="50" id="wave"></svg><span style="color:#2d5a41">0:12</span>
+ </div>
+ <div style="position:absolute;left:0;right:0;top:960px;text-align:center;color:var(--ment);font-weight:600;font-size:28px" id="sent">✓✓ Envoyé · une seule barre de réseau</div>
+ <div class="t mid" id="t5" style="top:1180px">Fonctionne même avec une connexion <em>faible.</em></div>
+</div>
+
+<!-- 6 : commerce -->
+<div class="s" id="s6">
+ <div class="card" id="c6" style="left:150px;top:300px;width:780px;padding:40px 44px">
+  <div style="display:flex;gap:18px;align-items:center;margin-bottom:12px"><div class="av" style="width:72px;height:72px;font-size:26px">LB</div><div><div style="font-weight:800;font-size:32px">Resto Le Baobab</div><div style="font-size:22px;color:#3c6b51">Abidjan · ★ 4,8/5 · ouvert</div></div></div>
+  <div class="item" id="i1"><div class="img"></div><div style="flex:1"><div style="font-weight:700;font-size:28px">Poulet braisé</div><div style="font-size:22px;color:#3c6b51">Avec attiéké</div></div><div style="font-weight:800;font-size:28px">3 500 F</div></div>
+  <div class="item" id="i2"><div class="img" style="background:linear-gradient(135deg,#9BD6B0,#2E8B57)"></div><div style="flex:1"><div style="font-weight:700;font-size:28px">Salade du jardin</div><div style="font-size:22px;color:#3c6b51">Fraîche</div></div><div style="font-weight:800;font-size:28px">1 500 F</div></div>
+  <div style="display:flex;gap:16px;margin-top:28px" id="i3"><div class="btn" style="flex:1">Commander · 5 000 F</div></div>
+  <div style="margin-top:22px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:24px;color:var(--action)" id="i4">✓ Commande n° 0128 confirmée par le restaurant</div>
+ </div>
+ <div class="t mid" id="t6" style="top:1220px;font-size:84px">Tout votre commerce dans votre téléphone. <em>Gratuit.</em></div>
+</div>
+
+<!-- 7 : livreur -->
+<div class="s" id="s7">
+ <div class="card" id="c7" style="left:130px;top:300px;width:820px;height:820px;overflow:hidden;background:#EAF2EC">
+  <svg width="820" height="820" viewBox="0 0 820 820">
+   <g stroke="#fff" stroke-width="26" fill="none"><path d="M0 200H820M0 520H820M220 0V820M600 0V820M0 760L820 60"/></g>
+   <rect x="250" y="230" width="320" height="260" rx="20" fill="#D5E8DB"/><rect x="630" y="550" width="190" height="200" rx="20" fill="#D5E8DB"/><rect x="20" y="20" width="170" height="150" rx="20" fill="#D5E8DB"/>
+   <path id="route" d="M120 700 L220 620 L220 520 L600 520 L600 200 L700 120" stroke="#009E49" stroke-width="10" stroke-dasharray="4 18" stroke-linecap="round" fill="none"/>
+   <circle cx="700" cy="120" r="34" fill="#04331C"/><text x="700" y="131" font-size="30" text-anchor="middle" fill="#fff">🏠</text>
+   <g id="rider"><circle r="40" fill="#009E49"/><text y="13" font-size="36" text-anchor="middle">🛵</text></g>
+  </svg>
+  <div style="position:absolute;left:30px;right:30px;bottom:30px;background:#fff;border-radius:28px;padding:24px 28px;display:flex;align-items:center;gap:18px">
+   <div class="av">IO</div><div style="flex:1"><div style="font-weight:800;font-size:26px">Ibrahim, votre livreur</div><div style="font-size:22px;color:#3c6b51" id="eta">Arrivée dans 8 min</div></div>
+  </div>
+ </div>
+ <div class="t mid" id="t7" style="top:1240px">Suivez votre livreur sur la <em>carte.</em></div>
+</div>
+
+<!-- 8 : fin -->
+<div class="s" id="s8">
+ <img src="../../../logos/kibaa_logo_vertical_fond_sombre.png" style="position:absolute;left:315px;top:380px;width:450px" id="lg8">
+ <div class="t mid" id="t8" style="top:960px">Disponible sur <em>Google Play.</em></div>
+ <img src="../../../badge-google-play.png" id="bd8" style="position:absolute;left:310px;top:1170px;width:460px">
+ <div class="t" id="sig8" style="top:1360px;font-size:54px">« Kibaa » — parlons.</div>
+ <div style="position:absolute;left:0;right:0;top:1560px;text-align:center;font-weight:600;font-size:24px;color:var(--ment)" id="m8">kibaa.online · Facebook @kibaa.online · TikTok @kibaa.app · YouTube @kibaa-app</div>
+ <div id="conf"></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ec=x=>1-Math.pow(1-cl(x),3);              // ease-out cubique
+const ex=x=>{x=cl(x);return x===1?1:1-Math.pow(2,-10*x)}; // ease-out expo
+const sp=x=>{x=cl(x);return 1+2.2*Math.pow(x-1,3)+1.2*Math.pow(x-1,2)}; // léger ressort
+const p=(t,a,d)=>(t-a)/d;
+// apparition : monte de 28 px + fondu
+function up(el,t,a,d=.5){const k=ex(p(t,a,d));el.style.opacity=k;el.style.transform=`translateY(${(1-k)*28}px)`}
+// visibilité de scène avec fondu d'entrée/sortie
+function scene(el,t,a,b,f=.3){el.style.opacity=Math.min(cl((t-a)/f),cl((b-t)/f))}
+
+// ── Carte d'Afrique en points
+const AF=[[-17,21],[-13,27.5],[-10,30],[-6,35.8],[0,35.8],[10,37],[11,33],[20,32],[25,31.5],[32,31.5],[34,28],[36,22],[38,18],[43,12],[51,11.8],[51,10],[45,2],[41,-2],[40,-10],[40,-15],[35,-22],[33,-26],[28,-33],[20,-35],[18,-31],[15,-27],[12,-17],[12,-6],[9,-1],[9,4],[5,6],[-3,5],[-8,4.5],[-13,8],[-17,14]];
+const K=12,X=lo=>(lo+20)*K,Y=la=>(38-la)*K;
+const inside=(x,y)=>{let c=false;for(let i=0,j=AF.length-1;i<AF.length;j=i++){const[xi,yi]=[X(AF[i][0]),Y(AF[i][1])],[xj,yj]=[X(AF[j][0]),Y(AF[j][1])];if((yi>y)!=(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)c=!c}return c};
+let dots='';for(let y=12;y<900;y+=24)for(let x=12;x<864;x+=24)if(inside(x,y))dots+=`<circle cx="${x}" cy="${y}" r="5" fill="rgba(255,255,255,.22)"/>`;
+const C=[['Burkina Faso',-1.5,12.4],['Gambie',-16.6,13.5],['Sénégal',-17.4,14.7],['Guinée-Bissau',-15.6,11.9],['Guinée',-13.7,9.5],['Mali',-8,12.6],['Maroc',-6.8,34],["Côte d'Ivoire",-4,5.4],['Ghana',-.2,5.6],['Togo',1.2,6.1],['Bénin',2.6,6.5],['Niger',2.1,13.5],['Nigeria',7.5,9.1],['Libye',13.2,32.9],['Gabon',9.5,.4],['Cameroun',11.5,3.9],['Tchad',15,12.1],['Congo-Brazzaville',13.5,-3.5],['RD Congo',23,-3]];
+let cs=C.map((c,i)=>`<g id="c${i}" transform="translate(${X(c[1])},${Y(c[2])})"><circle r="${i?13:18}" fill="${i?'#009E49':'#FACC15'}" stroke="#fff" stroke-width="3"/><circle id="h${i}" r="18" fill="none" stroke="${i?'#009E49':'#FACC15'}" stroke-width="4"/></g>`).join('');
+// Haïti, hors carte : pastille à gauche
+cs+=`<g id="c19" transform="translate(40,560)"><circle r="13" fill="#009E49" stroke="#fff" stroke-width="3"/><circle id="h19" r="18" fill="none" stroke="#009E49" stroke-width="4"/><text x="0" y="52" font-size="22" font-weight="700" fill="#CFEBDA" text-anchor="middle" font-family="Inter">Haïti</text></g>`;
+$('map').innerHTML=dots+cs;
+const ORD=[...C.keys(),19].slice(1).sort((a,b)=>(a===19?-30:C[a][1])-(b===19?-30:C[b][1])); // cascade ouest → est
+
+// ── onde vocale
+let w='';for(let i=0;i<38;i++){const h=8+Math.abs(Math.sin(i*1.7)*30+Math.sin(i*.6)*10);w+=`<rect x="${i*10}" y="${25-h/2}" width="6" height="${h}" rx="3" fill="#007A38" id="w${i}"/>`}$('wave').innerHTML=w;
+
+// ── confettis (déterministes)
+const CF=[];let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+for(let i=0;i<70;i++){const el=document.createElement('i');el.style.background=['#009E49','#FACC15','#FFFFFF'][i%3];$('conf').appendChild(el);CF.push({el,x:rnd()*1080,vx:(rnd()-.5)*500,vy:-900-rnd()*700,r:rnd()*720})}
+
+function render(t){
+ // 1 + 2 : carte (0–5 s)
+ scene($('s1'),t,0,5.1,.25);
+ const m=$('map');m.style.opacity=ec(p(t,0,.5));
+ for(let i=0;i<20;i++){const g=$('c'+i);let a;
+  if(i===0)a=.2;else a=2.2+ORD.indexOf(i)*.11;
+  const k=sp(p(t,a,.35));g.style.opacity=cl(p(t,a,.12));g.setAttribute('transform',g.getAttribute('transform').replace(/ scale\([^)]*\)/,'')+` scale(${Math.max(k,0.001)})`);
+  const h=$('h'+i),ph=((t-a)%1.2)/1.2;h.setAttribute('r',18+ph*30);h.style.opacity=t>a?(1-ph)*.8:0}
+ up($('t1'),t,.5);$('t1').style.opacity*=cl((2.3-t)/.3);
+ up($('t2'),t,2.6);
+ // 3 : logo (5–7 s)
+ scene($('s3'),t,5,7.15,.3);
+ const lk=ex(p(t,5.1,.7));$('logo').style.transform=`scale(${.95+.05*lk})`;$('logo').style.opacity=lk;
+ up($('t3'),t,5.8);
+ // 4 : vie privée (7–12 s)
+ scene($('s4'),t,7,12.15);
+ const pk=ex(p(t,7,.7));$('ph4').style.transform=`translateY(${(1-pk)*500}px)`;
+ up($('m1'),t,7.8,.4);up($('m2'),t,8.5,.4);up($('m3'),t,9.2,.4);
+ const s4=sp(p(t,9.9,.5));$('p4').style.transform=`translateX(-50%) scale(${s4})`;$('p4').style.opacity=cl(p(t,9.9,.15));
+ // 5 : connexion faible (12–17 s)
+ scene($('s5'),t,12,17.15);
+ $('sig').style.opacity=t<13.4?(.4+.6*Math.abs(Math.cos((t-12)*5))):1;
+ up($('vo'),t,13.4,.5);
+ for(let i=0;i<38;i++)$('w'+i).setAttribute('fill',(t-13.9)/1.6*38>i?'#007A38':'#9FCDB2');
+ up($('sent'),t,15.2,.4);
+ up($('t5'),t,12.4);
+ // 6 : commerce (17–22 s)
+ scene($('s6'),t,17,22.15);
+ const ck=ex(p(t,17,.6));$('c6').style.transform=`translateY(${(1-ck)*80}px) rotate(${-2*ck}deg)`;
+ up($('i1'),t,17.6,.4);up($('i2'),t,18.0,.4);up($('i3'),t,18.5,.4);up($('i4'),t,19.4,.4);
+ up($('t6'),t,20.0);
+ // 7 : livreur (22–27 s)
+ scene($('s7'),t,22,27.15);
+ const k7=ex(p(t,22,.6));$('c7').style.transform=`translateY(${(1-k7)*80}px) rotate(${-2*k7}deg)`;
+ const R=$('route'),L=R.getTotalLength(),pt=R.getPointAtLength(L*ec(p(t,22.6,4)));$('rider').setAttribute('transform',`translate(${pt.x},${pt.y})`);
+ $('eta').textContent=t<26.4?`Arrivée dans ${Math.max(1,Math.ceil(8*(1-p(t,22.6,4))))} min`:'Votre livreur est arrivé ✓';
+ up($('t7'),t,23.2);
+ // 8 : fin (27–30 s)
+ scene($('s8'),t,27,31,.3);
+ up($('lg8'),t,27,.5);up($('t8'),t,27.3,.5);
+ const bk=sp(p(t,27.6,.5));$('bd8').style.transform=`scale(${bk})`;$('bd8').style.opacity=cl(p(t,27.6,.15));
+ up($('sig8'),t,28.1,.5);up($('m8'),t,28.4,.5);
+ const tc=t-27.6;CF.forEach(c=>{if(tc<0){c.el.style.opacity=0;return}const x=540+c.vx*tc*.9+(c.x-540)*.15,y=1100+c.vy*tc+900*tc*tc;c.el.style.opacity=cl(1-(tc-1.6));c.el.style.transform=`translate(${x}px,${y}px) rotate(${c.r+tc*500}deg)`});
+}
+window.render=render;render(0);
+</script></body></html>
