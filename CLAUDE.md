@@ -16,6 +16,13 @@ Style validé (vidéo et affiche, nov. 2026) : **les 20 pays détachés, dispos�
 - Positionnement : « Née au Burkina, pour l'Afrique. » Fierté exportée, pas chauvine.
 - 5 piliers : Fierté (20 pays) · Vie privée (numéro jamais montré, QR, discussions verrouillées, éphémères) · Sobriété (2G, petits forfaits) · Commerce (gestion gratuite) · Création (vidéo en FCFA, BF uniquement).
 
+## Positionnement stratégique (confirmé par l'utilisateur, nov. 2026)
+- Origine réelle : perte de contact avec les clients (comptes de messagerie bloqués, numéros multiples), besoin d'un canal stable de service client → chatbot → messagerie → échanges entre clients → centre d'appels intégré. En public : raconter le **problème** (« perdre ses clients faute de canal stable »), **sans nommer WhatsApp ni l'ancien service de streaming**.
+- KIBAA **complète** les réseaux sociaux, ne les concurrence pas (« à côté de vos réseaux, pas à leur place »). Jamais de critique de TikTok, WhatsApp, Facebook.
+- Créateurs : communauté proche et ciblée (« Près de moi », abonnés liés à vous) ; ne pas promettre de revenus hors BF/CI.
+- Service après-vente des entreprises : toute une équipe (Agent, Superviseur, Manager) répond aux messages et aux appels au même endroit.
+- **Objectif de cession** : KIBAA pourra être vendue à un investisseur. La marque doit vivre seule : visuels et vidéos centrés sur KIBAA, pas sur la personne du fondateur ni sur NTIC Solution (éditeur mentionné discrètement). Le fondateur peut apparaître comme « l'équipe KIBAA », de préférence sur ses propres comptes, partagés ensuite.
+
 ## Charte graphique
 - Couleurs UNIQUEMENT : Vert KIBAA `#009E49` (principal, boutons) · Vert Action `#007A38` · Jaune Signal `#FACC15` (UN seul élément par visuel) · Vert Profond `#04331C` (fond des affiches) · Brume `#E9F8EF` · Blanc. Texte sur sombre : paragraphes `#D7EEE0`, mentions `#CFEBDA`, titres `#FFFFFF`.
 - Proportions : ~60 % vert profond, 25 % blanc/clair, 10 % vert KIBAA, 5 % jaune.
