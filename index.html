@@ -1,0 +1,2357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0f">
+  <title>Africa Box</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* =========================================================
+       THÈME
+       ========================================================= */
+    :root {
+      --bg: #0b0b0f;
+      --surface: #15151c;
+      --surface-2: #1e1e28;
+      --line: #2b2b38;
+      --text: #f4f4f6;
+      --muted: #9a9aab;
+      --brand: #e50914;
+      --brand-2: #ff2d3a;
+      --gold: #f5c518;
+      --green: #1db954;
+      --focus: #ffffff;
+      --radius: 14px;
+      --gutter: 12px;
+      --header-h: 56px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      font-size: 15px;
+      position: relative;
+    }
+    button, input, select, a { font: inherit; color: inherit; }
+    button { cursor: pointer; background: none; border: 0; }
+    a { text-decoration: none; }
+    img { display: block; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+    :focus { outline: none; }
+    :focus-visible, .kbd-nav :focus {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* =========================================================
+       EN-TÊTE
+       ========================================================= */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      height: var(--header-h);
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 10px;
+      background: rgba(11, 11, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      width: 100%;
+      overflow: hidden;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 5px;
+      font-weight: 800; font-size: 15px;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .brand i { color: var(--brand); font-size: 16px; }
+    .brand b { color: var(--brand); }
+    .search {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 10px;
+      height: 34px;
+    }
+    .search i { color: var(--muted); font-size: 12px; flex-shrink: 0; }
+    .search input {
+      flex: 1; min-width: 0;
+      background: none; border: 0; outline: none;
+      height: 100%; font-size: 13px;
+    }
+    .search:focus-within { border-color: var(--text); }
+
+    /* Bouton Premium de l'en-tête : uniquement sur grand écran
+       (sur mobile, c'est le CTA collant en bas qui joue ce rôle) */
+    .btn-premium {
+      display: none; align-items: center; justify-content: center; gap: 6px;
+      background: linear-gradient(135deg, #ffd84d, var(--gold));
+      color: #111; font-weight: 800; font-size: 13px;
+      height: 38px; padding: 0 14px;
+      border-radius: 999px;
+      flex-shrink: 0;
+      transition: transform .15s;
+    }
+    .btn-premium:hover, .btn-premium:focus-visible { transform: scale(1.06); }
+    .btn-premium i { font-size: 15px; }
+    @media (min-width: 900px) { .btn-premium { display: inline-flex; } }
+    .is-premium-user .btn-premium { display: none; }
+
+    @media (min-width: 600px) {
+      .header { gap: 12px; padding: 0 16px; height: 60px; }
+      .brand { font-size: 17px; gap: 6px; }
+      .brand i { font-size: 18px; }
+      .search { height: 38px; padding: 0 12px; gap: 8px; }
+      .search input { font-size: 14px; }
+    }
+
+    /* =========================================================
+       DISPOSITION
+       ========================================================= */
+    .layout { display: block; width: 100%; }
+    .stage {
+      position: sticky; top: var(--header-h); z-index: 40;
+      background: var(--bg);
+    }
+    .browse {
+      padding: 12px 12px 100px;
+      min-width: 0;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    @media (orientation: landscape) and (min-width: 900px) {
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.75fr) minmax(320px, 1fr);
+        height: calc(100vh - var(--header-h));
+      }
+      .stage {
+        position: relative; top: 0;
+        padding: 16px 0 16px 16px;
+        overflow-y: auto;
+      }
+      .stage .player { border-radius: var(--radius); }
+      .browse { overflow-y: auto; padding: 16px 16px 40px 18px; }
+    }
+    @media (orientation: landscape) and (max-height: 500px) and (max-width: 899px) {
+      .header { display: none; }
+      .layout { display: grid; grid-template-columns: 62% 38%; height: 100vh; }
+      .stage { position: relative; top: 0; }
+      .player { height: 100vh; aspect-ratio: auto; }
+      .now { display: none; }
+      .browse { overflow-y: auto; padding: 10px 10px 40px; }
+    }
+
+    /* =========================================================
+       LECTEUR
+       ========================================================= */
+    .player {
+      position: relative; width: 100%;
+      aspect-ratio: 16 / 9; max-height: 62vh;
+      background: #000; overflow: hidden;
+      user-select: none;
+    }
+    .player video {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      background: #000;
+      display: block;
+    }
+    .player.is-fullscreen, .player:fullscreen {
+      max-height: none;
+      height: 100%;
+      border-radius: 0 !important;
+    }
+
+    .ch-badge {
+      position: absolute; top: 10px; left: 10px; z-index: 5;
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(0,0,0,.6);
+      backdrop-filter: blur(6px);
+      padding: 5px 10px 5px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.1);
+      font-size: 12px; font-weight: 600;
+      transition: opacity .3s;
+      max-width: calc(100% - 20px);
+    }
+    .ch-badge img {
+      width: 22px; height: 22px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: #111;
+      flex-shrink: 0;
+    }
+    .ch-badge span:not(.live-dot) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .live-dot {
+      display: inline-flex; align-items: center; gap: 4px;
+      color: #ff5b5b; font-size: 10px; font-weight: 800;
+      letter-spacing: .5px;
+      flex-shrink: 0;
+    }
+    .live-dot::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #ff3b3b;
+      animation: blink 1.4s infinite;
+    }
+    @keyframes blink { 50% { opacity: .25; } }
+
+    .social-badge {
+      position: absolute; top: 10px; right: 10px; z-index: 5;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,0,0,.6);
+      backdrop-filter: blur(6px);
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(29,185,84,.4);
+      font-size: 11px; font-weight: 700; color: #3ddc79;
+      transition: opacity .3s;
+      max-width: calc(100% - 20px);
+    }
+    .social-badge .pulse-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #3ddc79;
+      animation: blink 1.6s infinite;
+    }
+    .player.controls-hidden .social-badge,
+    .player.is-muted-auto .social-badge { opacity: 0; }
+    @media (max-width: 480px) {
+      .social-badge { font-size: 10px; padding: 4px 8px; }
+    }
+
+    .loader {
+      position: absolute; inset: 0; z-index: 4;
+      display: none; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
+      background: rgba(0,0,0,.35);
+      pointer-events: none;
+    }
+    .player[data-state="loading"] .loader,
+    .player[data-state="reconnecting"] .loader { display: flex; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255,255,255,.15);
+      border-top-color: var(--brand);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader span {
+      font-size: 12px; color: #ddd;
+      background: rgba(0,0,0,.5);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .big-play {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(229, 9, 20, .9);
+      color: #fff; font-size: 22px;
+      display: none; align-items: center; justify-content: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,.6);
+    }
+    .player[data-state="paused"] .big-play { display: flex; }
+
+    .unmute {
+      position: absolute; top: 10px; right: 10px; z-index: 6;
+      display: none; align-items: center; gap: 6px;
+      background: #fff; color: #111;
+      font-weight: 700; font-size: 12px;
+      padding: 7px 12px; border-radius: 999px;
+    }
+    .player.is-muted-auto .unmute { display: inline-flex; }
+
+    .controls {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 7;
+      display: flex; align-items: center; gap: 2px;
+      padding: 24px 8px 6px;
+      background: linear-gradient(transparent, rgba(0,0,0,.85));
+      transition: opacity .3s, transform .3s;
+    }
+    .player.controls-hidden .controls { opacity: 0; transform: translateY(8px); pointer-events: none; }
+    .player.controls-hidden .ch-badge { opacity: 0; }
+    .player.controls-hidden { cursor: none; }
+    .ctrl {
+      width: 38px; height: 38px; border-radius: 9px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 15px; color: #fff; flex: none;
+    }
+    .ctrl:hover { background: rgba(255,255,255,.12); }
+    .ctrl.live-btn {
+      width: auto; padding: 0 8px;
+      font-size: 11px; font-weight: 800; gap: 5px;
+    }
+    .ctrl.live-btn.is-behind { color: var(--muted); }
+    .ctrl.live-btn.is-behind .live-dot::before { background: var(--muted); animation: none; }
+    .volume { width: 70px; accent-color: var(--brand); }
+    .spacer { flex: 1; }
+    .quality {
+      background: rgba(255,255,255,.1);
+      border: 0; border-radius: 7px;
+      height: 30px; padding: 0 6px;
+      font-size: 12px; color: #fff;
+    }
+    .quality option { color: #111; }
+    @media (max-width: 560px) {
+      .volume, .ctrl.pip-btn { display: none; }
+      .ctrl { width: 34px; height: 34px; font-size: 14px; }
+    }
+
+    .panel {
+      position: absolute; inset: 0; z-index: 9;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px;
+      text-align: center; padding: 16px;
+      background: radial-gradient(ellipse at center, rgba(20,20,28,.94), rgba(0,0,0,.97));
+    }
+    .panel.show { display: flex; }
+    .panel h3 { font-size: clamp(15px, 4vw, 22px); font-weight: 800; }
+    .panel p {
+      color: var(--muted);
+      font-size: clamp(12px, 3.5vw, 15px);
+      max-width: 440px;
+      line-height: 1.4;
+    }
+    .panel .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+    .panel .lock-price { color: var(--muted); font-size: 11px; }
+    .panel-close {
+      position: absolute; top: 8px; right: 8px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      color: #fff; font-size: 16px;
+    }
+    .lock-logo {
+      width: clamp(52px, 14vw, 80px);
+      height: clamp(52px, 14vw, 80px);
+      object-fit: contain;
+      border-radius: 16px;
+      background: #111;
+      padding: 6px;
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 40px rgba(245,197,24,.25);
+    }
+    .lock-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      color: var(--gold); font-weight: 800;
+      font-size: 11px; letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+    @media (max-height: 260px), (max-width: 340px) {
+      .lock-logo { display: none; }
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      height: 42px; padding: 0 18px;
+      border-radius: 999px;
+      font-weight: 700; font-size: 14px;
+      white-space: nowrap;
+      transition: transform .15s, background .2s;
+    }
+    .btn:hover, .btn:focus-visible { transform: scale(1.04); }
+    .btn-red { background: var(--brand); color: #fff; }
+    .btn-red:hover { background: var(--brand-2); }
+    .btn-gold { background: var(--gold); color: #111; }
+    .btn-ghost { background: rgba(255,255,255,.1); color: #fff; }
+
+    .now {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      width: 100%;
+    }
+    @media (orientation: landscape) and (min-width: 900px) {
+      .now { padding: 14px 0 0; border: 0; }
+    }
+    .now-logo {
+      width: 38px; height: 38px;
+      object-fit: contain;
+      border-radius: 9px;
+      background: var(--surface);
+      padding: 3px;
+      flex-shrink: 0;
+    }
+    .now-text { flex: 1; min-width: 0; overflow: hidden; }
+    .now-name {
+      font-weight: 800; font-size: 15px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .now-sub {
+      color: var(--muted); font-size: 11px;
+      display: flex; gap: 6px; align-items: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .icon-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%; flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+    .icon-btn.is-on { color: var(--gold); border-color: var(--gold); }
+
+    /* =========================================================
+       BANDEAU PREUVE SOCIALE (informatif, pas un bouton)
+       ========================================================= */
+    .social-strip {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px 18px;
+      flex-wrap: wrap;
+      background: linear-gradient(90deg, rgba(29,185,84,.08), rgba(245,197,24,.08));
+      border: 1px solid rgba(29,185,84,.2);
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: #ddd;
+      width: 100%;
+    }
+    .social-strip .s-item {
+      display: inline-flex; align-items: center; gap: 5px;
+      white-space: nowrap;
+    }
+    .social-strip .s-item i { color: #3ddc79; font-size: 11px; }
+    .social-strip .s-item strong { color: #fff; }
+    .social-strip .s-sep { color: #444; }
+    @media (max-width: 420px) {
+      .social-strip { gap: 6px 12px; font-size: 10.5px; padding: 8px 10px; }
+      .social-strip .s-sep { display: none; }
+    }
+
+    .review-rotator {
+      display: flex; align-items: flex-start; gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 12px;
+      min-height: 58px;
+    }
+    .review-rotator .r-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, #2a0a0d, #1a1406);
+      border: 1px solid rgba(245,197,24,.3);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-weight: 800; font-size: 13px;
+      flex-shrink: 0;
+    }
+    .review-rotator .r-body { flex: 1; min-width: 0; }
+    .review-rotator .r-name {
+      font-size: 11px; font-weight: 700; color: #fff;
+      display: flex; align-items: center; gap: 6px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .review-rotator .r-name .stars { color: var(--gold); font-size: 10px; letter-spacing: 1px; }
+    .review-rotator .r-text {
+      font-size: 11.5px; color: var(--muted); line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    .guarantee-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(29,185,84,.1);
+      border: 1px solid rgba(29,185,84,.3);
+      border-radius: 10px;
+      padding: 9px 12px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #ddd;
+      line-height: 1.4;
+    }
+    .guarantee-badge i { color: #3ddc79; font-size: 16px; flex-shrink: 0; }
+    .guarantee-badge strong { color: #fff; }
+
+    /* =========================================================
+       FILTRES
+       ========================================================= */
+    .chips {
+      display: flex; gap: 6px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 2px 2px 10px;
+      margin: 0 -2px;
+      scrollbar-width: none;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+    }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 600;
+      color: #ddd;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .chip small { color: var(--muted); font-weight: 500; font-size: 11px; }
+    .chip.is-active {
+      background: var(--text);
+      color: #111;
+      border-color: var(--text);
+    }
+    .chip.is-active small { color: #555; }
+
+    .result-info {
+      color: var(--muted);
+      font-size: 11px;
+      margin: 0 2px 8px;
+    }
+
+    /* =========================================================
+       GRILLE DES CHAÎNES
+       ========================================================= */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+      gap: 8px;
+      width: 100%;
+    }
+    @media (min-width: 600px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+    }
+    .card {
+      position: relative;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 5px;
+      padding: 10px 6px 8px;
+      min-height: 108px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-align: center;
+      transition: transform .15s, border-color .15s, background .15s;
+      content-visibility: auto;
+      contain-intrinsic-size: 108px;
+      overflow: hidden;
+    }
+    .card:hover { background: var(--surface-2); border-color: #444; }
+    .card:focus-visible, .kbd-nav .card:focus {
+      transform: scale(1.05);
+      z-index: 2;
+      outline: 3px solid var(--focus);
+      outline-offset: 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,.6);
+    }
+    .card.is-active {
+      border-color: var(--brand);
+      background: #1c0d10;
+    }
+    .card.is-active::after {
+      content: '\f04b';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      top: 6px; left: 6px;
+      font-size: 9px;
+      color: var(--brand);
+    }
+    .thumb {
+      width: 50px; height: 50px;
+      border-radius: 9px;
+      background: #0f0f14;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .thumb img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      padding: 3px;
+    }
+    .thumb .initials {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .card .name {
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1.2;
+      word-break: break-word;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      width: 100%;
+    }
+    .tag {
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .3px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .tag-free { background: rgba(29,185,84,.15); color: #3ddc79; }
+    .tag-premium { background: rgba(245,197,24,.14); color: var(--gold); }
+    .is-premium-user .tag-premium { display: none; }
+    .card .fav {
+      position: absolute;
+      top: 5px; right: 6px;
+      font-size: 9px;
+      color: var(--gold);
+    }
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 10px;
+    }
+    .empty i {
+      font-size: 26px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    /* =========================================================
+       FEUILLE DES OFFRES — un seul écran : choisir puis payer
+       ========================================================= */
+    .sheet-backdrop {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(4px);
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s;
+    }
+    .sheet {
+      position: fixed; z-index: 101;
+      left: 0; right: 0; bottom: 0;
+      width: 100vw;
+      max-width: 100vw;
+      max-height: 92vh;
+      display: flex; flex-direction: column;
+      background: #121218;
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: 20px 20px 0 0;
+      transform: translateY(105%);
+      transition: transform .3s cubic-bezier(.2,.8,.2,1);
+      overflow: hidden;
+      will-change: transform;
+    }
+    .sheet-open .sheet-backdrop { opacity: 1; pointer-events: auto; }
+    .sheet-open .sheet { transform: translateY(0); }
+    .sheet-open { overflow: hidden; }
+    .sheet-open .sticky-cta,
+    .sheet-open .whatsapp-float { display: none !important; }
+
+    @media (min-width: 760px) {
+      .sheet {
+        left: 50%; right: auto; bottom: auto; top: 50%;
+        width: min(860px, 94vw);
+        max-height: 90vh;
+        border-radius: 20px;
+        border-bottom: 1px solid var(--line);
+        transform: translate(-50%, -46%) scale(.97);
+        opacity: 0;
+        transition: transform .28s, opacity .28s;
+        pointer-events: none;
+      }
+      .sheet-open .sheet {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    .sheet-grip {
+      width: 40px; height: 4px;
+      border-radius: 2px;
+      background: #3a3a48;
+      margin: 8px auto 0;
+      flex-shrink: 0;
+    }
+    @media (min-width: 760px) { .sheet-grip { display: none; } }
+
+    .sheet-head {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 14px 8px;
+      flex-shrink: 0;
+    }
+    .sheet-head h2 {
+      flex: 1;
+      font-size: 17px;
+      font-weight: 800;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sheet-head h2 i { color: var(--gold); margin-right: 5px; }
+
+    .sheet-body {
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 14px 14px;
+      flex: 1 1 auto;
+      min-height: 0;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sheet-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    /* Pays : une seule ligne discrète, pas un bloc */
+    .country-line {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .country-line i { color: var(--gold); }
+    .country-line select {
+      margin-left: auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 12px;
+      padding: 6px 8px;
+      min-width: 0;
+      max-width: 62%;
+    }
+
+    /* Pied : UN seul bouton de paiement (Chariow) */
+    .sheet-foot {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      background: #121218;
+      flex-shrink: 0;
+    }
+    .btn-pay {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1px;
+      width: 100%;
+      min-height: 54px;
+      padding: 8px 18px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ffd84d, var(--gold));
+      color: #111;
+      box-shadow: 0 8px 24px rgba(245,197,24,.25);
+      transition: transform .15s;
+      touch-action: manipulation;
+    }
+    .btn-pay:hover, .btn-pay:focus-visible { transform: scale(1.02); }
+    .btn-pay:active { transform: scale(.97); }
+    .btn-pay .pay-main {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 16px; font-weight: 900;
+    }
+    .btn-pay .pay-sub {
+      font-size: 11px; font-weight: 700; color: #4a3a00;
+    }
+    .pay-alt {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pay-alt i { color: #3ddc79; margin-right: 4px; }
+    @media (min-width: 760px) {
+      .btn-pay { max-width: 420px; align-self: center; }
+    }
+
+    /* =========================================================
+       CARTES D'OFFRES
+       ========================================================= */
+    .plans {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      width: 100%;
+      padding-top: 6px;
+    }
+    @media (min-width: 600px) {
+      .plans { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    }
+
+    .plan {
+      position: relative;
+      background: var(--surface);
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "icon dur price"
+        "icon month price"
+        "save dev radio";
+      align-items: center;
+      gap: 2px 10px;
+      transition: border-color .15s, background .15s;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      text-align: left;
+    }
+    .plan:hover { border-color: #555; }
+    .plan[aria-checked="true"] {
+      border-color: var(--gold);
+      background: #1b1709;
+    }
+    .plan:focus-visible, .kbd-nav .plan:focus {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+    .plan .radio {
+      grid-area: radio;
+      justify-self: end;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid #555;
+      flex-shrink: 0;
+    }
+    .plan[aria-checked="true"] .radio {
+      border-color: var(--gold);
+      background: radial-gradient(var(--gold) 45%, transparent 50%);
+    }
+    .plan .ribbon {
+      position: absolute;
+      top: -8px; left: 10px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #fff;
+      max-width: calc(100% - 60px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .plan .ribbon.gold { background: var(--gold); color: #111; }
+    .plan .p-icon {
+      grid-area: icon;
+      font-size: 20px;
+      color: var(--gold);
+      width: 40px;
+      height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(245,197,24,.1);
+      border-radius: 9px;
+    }
+    .plan .p-dur {
+      grid-area: dur;
+      font-weight: 800;
+      font-size: 14px;
+      align-self: end;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+    .plan .p-price {
+      grid-area: price;
+      font-weight: 900;
+      font-size: 17px;
+      letter-spacing: -.4px;
+      text-align: right;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+    .plan .p-price small {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+    .plan .p-month {
+      grid-area: month;
+      color: var(--muted);
+      font-size: 10px;
+      align-self: start;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+    .plan .p-save {
+      grid-area: save;
+      color: #3ddc79;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .plan .p-dev {
+      grid-area: dev;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+    .plan .p-dev i { font-size: 9px; margin-right: 3px; }
+
+    @media (min-width: 600px) {
+      .plan {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+        padding: 14px 12px;
+      }
+      .plan .p-icon {
+        width: auto; height: auto;
+        background: none;
+        border-radius: 0;
+        margin-bottom: 2px;
+      }
+      .plan .p-price { font-size: 20px; text-align: left; }
+      .plan .p-month, .plan .p-save, .plan .p-dev { font-size: 11px; }
+      .plan .radio { position: absolute; top: 12px; right: 12px; }
+    }
+
+    @media (max-width: 360px) {
+      .plan { grid-template-columns: 36px 1fr auto; padding: 10px; gap: 2px 8px; }
+      .plan .p-icon { width: 36px; height: 36px; font-size: 18px; }
+      .plan .p-dur { font-size: 13px; }
+      .plan .p-price { font-size: 15px; }
+      .plan .p-month, .plan .p-save, .plan .p-dev { font-size: 9px; }
+    }
+
+    .perks {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    @media (min-width: 520px) {
+      .perks { grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+    }
+    .perks li {
+      display: flex; gap: 8px;
+      align-items: flex-start;
+      font-size: 12px;
+      color: #ddd;
+      line-height: 1.4;
+    }
+    .perks i { color: var(--green); margin-top: 2px; font-size: 11px; flex-shrink: 0; }
+
+    /* =========================================================
+       CTA COLLANT MOBILE — le SEUL bouton "offres" permanent sur mobile
+       ========================================================= */
+    .sticky-cta {
+      display: none;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 55;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, rgba(11,11,15,0), rgba(11,11,15,.96) 30%);
+    }
+    .sticky-cta .sc-inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #ffd84d, var(--gold));
+      color: #111;
+      border-radius: 999px;
+      padding: 10px 14px;
+      box-shadow: 0 10px 30px rgba(245,197,24,.35);
+      width: 100%;
+      transition: transform .15s;
+    }
+    .sticky-cta .sc-inner:hover,
+    .sticky-cta:focus-visible .sc-inner { transform: scale(1.02); }
+    .sticky-cta .sc-icon {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(0,0,0,.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .sticky-cta .sc-text { flex: 1; min-width: 0; text-align: left; line-height: 1.15; }
+    .sticky-cta .sc-text strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sticky-cta .sc-text small {
+      display: block;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #4a3a00;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sticky-cta .sc-arrow { font-size: 14px; flex-shrink: 0; }
+    @media (max-width: 899px) {
+      .sticky-cta { display: block; }
+      .browse { padding-bottom: 110px; }
+      .whatsapp-float { bottom: 84px; }
+    }
+    @media (orientation: landscape) and (max-height: 500px) {
+      .sticky-cta { display: none; }
+    }
+    .is-premium-user .sticky-cta { display: none !important; }
+
+    /* =========================================================
+       DIVERS
+       ========================================================= */
+    .whatsapp-float {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 60;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: #25D366;
+      color: #fff;
+      font-size: 24px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(37,211,102,.4);
+    }
+    @media (orientation: landscape) and (max-height: 500px) {
+      .whatsapp-float { width: 42px; height: 42px; font-size: 20px; }
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 84px;
+      z-index: 200;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      background: #fff;
+      color: #111;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      max-width: calc(100vw - 24px);
+      transition: opacity .25s, transform .25s;
+      pointer-events: none;
+      box-shadow: 0 8px 30px rgba(0,0,0,.5);
+      text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast.error { background: #e50914; color: #fff; }
+    .toast.success { background: #1db954; color: #fff; }
+
+    @media (min-width: 1600px) {
+      body { font-size: 17px; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .thumb { width: 64px; height: 64px; }
+      .card .name { font-size: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- EN-TÊTE -->
+  <header class="header">
+    <div class="brand"><i class="fas fa-tv"></i><span>Africa <b>Box</b></span></div>
+    <label class="search">
+      <i class="fas fa-search"></i>
+      <span class="sr-only">Rechercher une chaîne</span>
+      <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" enterkeyhint="search">
+    </label>
+    <button class="btn-premium" id="btnHeaderPremium">
+      <i class="fas fa-crown"></i><span>Passer Premium</span>
+    </button>
+  </header>
+
+  <main class="layout">
+
+    <!-- LECTEUR -->
+    <section class="stage">
+      <div class="player" id="player" data-state="loading" tabindex="0" aria-label="Lecteur vidéo">
+        <video id="video" playsinline webkit-playsinline preload="auto"></video>
+
+        <div class="ch-badge" id="chBadge">
+          <img id="badgeLogo" alt="">
+          <span id="badgeName">—</span>
+          <span class="live-dot">DIRECT</span>
+        </div>
+
+        <div class="social-badge" id="socialBadge">
+          <span class="pulse-dot"></span>
+          <span><span id="activeNow">1 248</span> en ligne</span>
+        </div>
+
+        <div class="loader"><div class="spinner"></div><span id="loaderText">Chargement…</span></div>
+        <button class="big-play" id="bigPlay" aria-label="Lecture"><i class="fas fa-play"></i></button>
+        <button class="unmute" id="unmute"><i class="fas fa-volume-xmark"></i> Activer le son</button>
+
+        <div class="controls" id="controls">
+          <button class="ctrl" id="btnPrev" aria-label="Chaîne précédente"><i class="fas fa-backward-step"></i></button>
+          <button class="ctrl" id="btnPlay" aria-label="Lecture / pause"><i class="fas fa-pause"></i></button>
+          <button class="ctrl" id="btnNext" aria-label="Chaîne suivante"><i class="fas fa-forward-step"></i></button>
+          <button class="ctrl" id="btnMute" aria-label="Couper le son"><i class="fas fa-volume-high"></i></button>
+          <input class="volume" id="volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+          <button class="ctrl live-btn" id="btnLive" aria-label="Revenir au direct"><span class="live-dot">DIRECT</span></button>
+          <span class="spacer"></span>
+          <select class="quality" id="quality" aria-label="Qualité" hidden></select>
+          <button class="ctrl pip-btn" id="btnPip" aria-label="Image dans l'image" hidden><i class="fas fa-clone"></i></button>
+          <button class="ctrl" id="btnFs" aria-label="Plein écran"><i class="fas fa-expand"></i></button>
+        </div>
+
+        <div class="panel" id="errorPanel" role="alert">
+          <i class="fas fa-satellite-dish" style="font-size:30px;color:var(--muted)"></i>
+          <h3>Signal momentanément indisponible</h3>
+          <p>Réessayez ou passez à une autre chaîne.</p>
+          <div class="actions">
+            <button class="btn btn-red" id="btnRetry"><i class="fas fa-rotate-right"></i> Réessayer</button>
+            <button class="btn btn-ghost" id="btnSkip"><i class="fas fa-forward-step"></i> Suivante</button>
+          </div>
+        </div>
+
+        <div class="panel" id="lockPanel">
+          <button class="panel-close" id="lockClose" aria-label="Fermer"><i class="fas fa-xmark"></i></button>
+          <img class="lock-logo" id="lockLogo" alt="">
+          <span class="lock-tag"><i class="fas fa-crown"></i> Premium</span>
+          <h3 id="lockTitle">Chaîne premium</h3>
+          <p id="lockText">Regardez cette chaîne et toutes les chaînes premium en HD.</p>
+          <div class="actions">
+            <button class="btn btn-gold" id="btnUnlock"><i class="fas fa-unlock"></i> Débloquer</button>
+          </div>
+          <small class="lock-price" id="lockPrice"></small>
+        </div>
+      </div>
+
+      <div class="now" id="now">
+        <img class="now-logo" id="nowLogo" alt="">
+        <div class="now-text">
+          <div class="now-name" id="nowName">—</div>
+          <div class="now-sub"><span class="live-dot">DIRECT</span><span id="nowCat"></span></div>
+        </div>
+        <button class="icon-btn" id="btnFav" aria-label="Ajouter aux favoris"><i class="far fa-star"></i></button>
+      </div>
+    </section>
+
+    <!-- CHAÎNES -->
+    <section class="browse">
+      <div class="social-strip" role="note" aria-label="Preuve sociale">
+        <span class="s-item"><i class="fas fa-users"></i><strong>+12 000</strong> abonnés</span>
+        <span class="s-sep">·</span>
+        <span class="s-item"><i class="fas fa-tv"></i><strong id="stripChannelCount">+500</strong> chaînes</span>
+        <span class="s-sep">·</span>
+        <span class="s-item"><i class="fas fa-star"></i><strong>4,8/5</strong> satisfaction</span>
+        <span class="s-sep">·</span>
+        <span class="s-item"><i class="fas fa-shield-halved"></i><strong>7 jours</strong> garanti</span>
+      </div>
+
+      <nav class="chips" id="chips" aria-label="Catégories"></nav>
+      <div class="result-info" id="resultInfo" aria-live="polite"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+  </main>
+
+  <!-- CTA COLLANT MOBILE -->
+  <button class="sticky-cta" id="stickyCta" aria-label="Voir les offres Premium">
+    <span class="sc-inner">
+      <span class="sc-icon"><i class="fas fa-crown"></i></span>
+      <span class="sc-text">
+        <strong>Passer Premium</strong>
+        <small id="stickyCtaSub">Dès 1 250 FCFA/mois · 7 jours garantis</small>
+      </span>
+      <i class="fas fa-chevron-right sc-arrow"></i>
+    </span>
+  </button>
+
+  <!-- FEUILLE DES OFFRES : choisir une formule → payer sur Chariow -->
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2 id="sheetTitle"><i class="fas fa-crown"></i>Passer Premium</h2>
+      <button class="icon-btn" id="sheetClose" aria-label="Fermer"><i class="fas fa-xmark"></i></button>
+    </div>
+
+    <div class="sheet-body">
+      <p class="sheet-sub" id="sheetSub">Choisissez votre formule.</p>
+      <div class="plans" id="plans" role="radiogroup" aria-label="Offres"></div>
+
+      <div class="country-line">
+        <i class="fas fa-globe"></i>
+        <label for="countrySelect">Vous payez depuis</label>
+        <select id="countrySelect">
+          <option value="AUTO">Détection auto</option>
+          <option value="BF">🇧🇫 Burkina Faso</option>
+          <option value="CI">🇨🇮 Côte d'Ivoire</option>
+          <option value="SN">🇸🇳 Sénégal</option>
+          <option value="ML">🇲🇱 Mali</option>
+          <option value="BJ">🇧🇯 Bénin</option>
+          <option value="TG">🇹🇬 Togo</option>
+          <option value="NE">🇳🇪 Niger</option>
+          <option value="EU">🇪🇺 Europe (EUR)</option>
+          <option value="US">🌍 Autre (USD)</option>
+        </select>
+      </div>
+
+      <ul class="perks">
+        <li><i class="fas fa-check"></i><span id="perkCount">Toutes les chaînes premium débloquées</span></li>
+        <li><i class="fas fa-check"></i><span>Sport, cinéma, séries, info, jeunesse</span></li>
+        <li><i class="fas fa-check"></i><span>Mobile, tablette, PC et Smart TV</span></li>
+        <li><i class="fas fa-check"></i><span>Activation rapide + assistance WhatsApp</span></li>
+      </ul>
+
+      <div class="guarantee-badge">
+        <i class="fas fa-shield-halved"></i>
+        <span><strong>Satisfait ou remboursé 7 jours.</strong> Si le service ne vous convient pas, contactez-nous sous 7 jours.</span>
+      </div>
+
+      <div class="review-rotator" id="reviewRotator" aria-live="polite">
+        <div class="r-avatar" id="revAvatar">A</div>
+        <div class="r-body">
+          <div class="r-name">
+            <span id="revName">Aminata K.</span>
+            <span class="stars" id="revStars">★★★★★</span>
+          </div>
+          <div class="r-text" id="revText">Super qualité, je regarde le foot sans coupure. Activation rapide.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet-foot" id="sheetFoot">
+      <a class="btn-pay" id="btnPay" target="_blank" rel="noopener noreferrer"></a>
+      <div class="pay-alt"><i class="fas fa-shield-halved"></i>Paiement sécurisé Chariow · activation rapide</div>
+    </div>
+  </div>
+
+  <a class="whatsapp-float" id="waFloat" target="_blank" rel="noopener" aria-label="Assistance WhatsApp"><i class="fab fa-whatsapp"></i></a>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var CONFIG = {
+      defaultChannel: 'Africa 24',
+      streamTimeout: 12000,
+      maxRetries: 4,
+      whatsappNumber: '22676946396',
+      whatsappHelp: 'Bonjour Africa Box, j\'ai besoin d\'assistance.',
+      defaultOffer: 1,   // index 1 = "6 Mois"
+      currency: 'FCFA'
+    };
+
+    /* =========================================================
+       OFFRES — paiement via Chariow
+       ========================================================= */
+    var OFFERS = [
+      { duration: '1 Mois',  price: 3000,  perMonth: 3000, savings: 0,
+        devices: '1 appareil', icon: 'fa-tv',
+        chariow: 'https://abvision.mychariow.shop/tala' },
+
+      { duration: '6 Mois',  price: 10000, perMonth: 1667, savings: 8000,
+        devices: '4 appareils + PC', icon: 'fa-trophy',
+        chariow: 'https://abvision.mychariow.shop/kolala',
+        ribbon: 'Meilleur choix', gold: true },
+
+      { duration: '12 Mois', price: 15000, perMonth: 1250, savings: 21000,
+        devices: '6 appareils + TV', icon: 'fa-gem',
+        chariow: 'https://abvision.mychariow.shop/funpla' }
+    ];
+
+    /* =========================================================
+       PAYS / DEVISES
+       ========================================================= */
+    var COUNTRIES = {
+      BF: { name: 'Burkina Faso',   currency: 'FCFA', rate: 1,         decimals: 0 },
+      CI: { name: "Côte d'Ivoire",  currency: 'FCFA', rate: 1,         decimals: 0 },
+      SN: { name: 'Sénégal',        currency: 'FCFA', rate: 1,         decimals: 0 },
+      ML: { name: 'Mali',           currency: 'FCFA', rate: 1,         decimals: 0 },
+      BJ: { name: 'Bénin',          currency: 'FCFA', rate: 1,         decimals: 0 },
+      TG: { name: 'Togo',           currency: 'FCFA', rate: 1,         decimals: 0 },
+      NE: { name: 'Niger',          currency: 'FCFA', rate: 1,         decimals: 0 },
+      EU: { name: 'Europe / Autre', currency: 'EUR',  rate: 1/655.957, decimals: 2 },
+      US: { name: 'Autre',          currency: 'USD',  rate: 1/600,     decimals: 2 }
+    };
+
+    var FREE = [
+      { name: 'Africa 24', img: 'https://www9.0zz0.com/2024/08/03/21/767280668.png', url: 'https://edge13.vedge.infomaniak.com/livecast/ik:africa24/chunklist_w241091394.m3u8' },
+      { name: 'RTB',       img: 'https://www7.0zz0.com/2024/08/02/11/333373841.png', url: 'https://edge12.vedge.infomaniak.com/livecast/ik:rtblive1_8/manifest.m3u8' },
+      { name: 'RTI 1',     img: 'https://www10.0zz0.com/2024/08/02/11/153609319.png', url: 'https://video1.getstreamhosting.com:1936/8336/8336/playlist.m3u8' },
+      { name: 'RTI 2',     img: 'https://www10.0zz0.com/2024/08/02/17/880415484.png', url: 'https://video1.getstreamhosting.com:1936/8104/8104/playlist.m3u8' },
+      { name: 'RTS 1',     img: 'https://www12.0zz0.com/2024/08/05/15/299958314.png', url: 'http://xkrbppfj.mnbvcc.com:80/live/F5HTPTA2/MRCZ2C6W/154365.m3u8' },
+      { name: 'RTN',       img: 'https://www3.0zz0.com/2024/08/03/23/992357632.png', url: 'https://mediaserver1.castpin.com/hls/telesahel/index.m3u8' },
+      { name: 'ORTM 1',    img: 'https://www8.0zz0.com/2024/08/02/11/529794985.png', url: 'https://video1.getstreamhosting.com:1936/8130/8130/playlist.m3u8' },
+      { name: 'TF1',       img: 'https://www4.0zz0.com/2024/08/02/19/658699334.png', url: 'http://xkrbppfj.mnbvcc.com:80/live/F5HTPTA2/MRCZ2C6W/33826.m3u8' },
+      { name: 'FIFA+',     img: 'https://i.ibb.co/FbFxshWB/Add-Text-06-10-09-33-02.png', url: 'https://37b4c228.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWZyX0ZJRkFQbHVzRnJlbmNoX0hMUw/playlist.m3u8' }
+    ];
+
+    var PREMIUM = [
+      ['LA 3', 'https://www8.0zz0.com/2024/08/02/17/848624392.png'],
+      ['SYFY', 'https://www4.0zz0.com/2024/08/03/21/782764156.png'],
+      ['TRACE AFRICA', 'https://www9.0zz0.com/2024/08/02/14/300570449.png'],
+      ['NOVELAS', 'https://www8.0zz0.com/2024/08/02/14/226434745.png'],
+      ['NOLLYWOOD', 'https://www8.0zz0.com/2024/08/02/14/339086449.png'],
+      ['A+', 'https://www7.0zz0.com/2024/08/02/19/342432574.png'],
+      ['BENIE TV', 'https://www3.0zz0.com/2024/08/02/17/512588113.png'],
+      ['ZEE MAGIC', 'https://www11.0zz0.com/2024/08/02/19/401358724.png'],
+      ['CANAL+ SPORT', 'https://www11.0zz0.com/2024/08/02/19/428153634.png'],
+      ['AFRO MAGIC', 'https://www2.0zz0.com/2025/08/05/14/374274234.png'],
+      ['TF1 SERIES', 'https://www4.0zz0.com/2024/08/02/19/249284201.png'],
+      ['ORTM 2', 'https://www12.0zz0.com/2024/08/02/11/394695009.png'],
+      ['TVT', 'https://www12.0zz0.com/2024/08/03/23/511263635.png'],
+      ['A+ IVOIRE', 'https://www3.0zz0.com/2024/08/02/17/771903257.png'],
+      ['NOLLY EPIC', 'https://www12.0zz0.com/2024/08/02/14/674631264.png'],
+      ['CANAL+ SPORT1', 'https://www4.0zz0.com/2024/08/02/19/662902862.png'],
+      ['CANAL+ SPORT2', 'https://www9.0zz0.com/2024/08/02/19/448373422.png'],
+      ['CANAL+ SPORT 3', 'https://www12.0zz0.com/2024/08/02/19/710696525.png'],
+      ['CANAL+ SPORT 4', 'https://www9.0zz0.com/2024/08/02/19/765468348.png'],
+      ['CANAL+ SPORT 5', 'https://www4.0zz0.com/2024/08/02/19/962099565.png'],
+      ['SS GRANDSTAND', 'https://www2.0zz0.com/2025/08/15/13/680193869.png'],
+      ['SUPERSPORT 1', 'https://www2.0zz0.com/2025/08/15/13/276074156.png'],
+      ['SUPERSPORT 2', 'https://www2.0zz0.com/2025/08/15/13/276074156.png'],
+      ['SUPERSPORT 3', 'https://www2.0zz0.com/2025/08/15/13/276074156.png'],
+      ['SUPERSPORT 4', 'https://www2.0zz0.com/2025/08/15/13/276074156.png'],
+      ['SS LALIGA', 'https://www2.0zz0.com/2025/08/15/13/403836477.png'],
+      ['NW SPORT 1', 'https://www2.0zz0.com/2025/08/06/11/222909793.png'],
+      ['NW SPORT 2', 'https://www2.0zz0.com/2025/08/06/11/410128659.png'],
+      ['NW SPORT 3', 'https://www2.0zz0.com/2025/08/06/11/918970715.png'],
+      ['NW SPORT 4', 'https://www2.0zz0.com/2025/08/06/11/735968347.png'],
+      ['NW SPORT 5', 'https://www2.0zz0.com/2025/08/06/11/499356631.png'],
+      ['NW SPORT 6', 'https://www2.0zz0.com/2025/08/06/11/299922740.png'],
+      ['NW SPORT 7', 'https://www2.0zz0.com/2025/08/06/11/226334933.png'],
+      ['EUROSPORT 1', 'https://www4.0zz0.com/2024/08/02/19/970018965.png'],
+      ['EUROSPORT 2', 'https://www4.0zz0.com/2024/08/02/19/632959211.png'],
+      ['beIN SPORT 1', 'https://www8.0zz0.com/2024/08/02/20/534618143.png'],
+      ['beIN SPORTS 2', 'https://www4.0zz0.com/2024/08/02/19/584244375.png'],
+      ['beIN SPORT 3', 'https://www12.0zz0.com/2024/08/02/20/191541997.png'],
+      ['beIN MAX 4', 'https://www7.0zz0.com/2024/08/04/16/470754045.png'],
+      ['beIN MAX 5', 'https://www10.0zz0.com/2024/08/04/16/203037067.png'],
+      ['beIN MAX 6', 'https://www5.0zz0.com/2024/08/04/16/923922490.png'],
+      ['beIN MAX 7', 'https://www7.0zz0.com/2024/08/04/16/761214351.png'],
+      ['beIN MAX 8', 'https://www10.0zz0.com/2024/08/04/16/490652275.png'],
+      ['beIN MAX 9', 'https://www10.0zz0.com/2024/08/04/16/484553568.png'],
+      ['beIN MAX 10', 'https://www11.0zz0.com/2024/08/04/16/564145867.png'],
+      ['DAZN', 'https://www2.0zz0.com/2025/07/20/08/659503761.png'],
+      ['BF INFO', 'https://www12.0zz0.com/2024/08/02/17/918060545.png'],
+      ['NW CINEMA', 'https://www2.0zz0.com/2025/08/06/11/466225499.png'],
+      ['NW SERIES', 'https://www2.0zz0.com/2025/08/06/11/367401199.png'],
+      ['NW TRANSNAT1', 'https://www2.0zz0.com/2025/08/06/11/438757646.png'],
+      ['NW MIX', 'https://www2.0zz0.com/2025/08/06/11/790845930.png'],
+      ['NW MUSIK', 'https://www2.0zz0.com/2025/08/06/11/414906568.png'],
+      ['NW INFO', 'https://www2.0zz0.com/2025/08/06/11/424903821.png'],
+      ['NW NEWS', 'https://www2.0zz0.com/2025/08/06/11/796637418.png'],
+      ['NW ECONOMIE', 'https://www2.0zz0.com/2025/08/06/11/700596177.png'],
+      ['CANAL+ ELLES', 'https://www5.0zz0.com/2024/08/04/16/683859201.png'],
+      ['CANAL+ MOTOGP', 'https://www5.0zz0.com/2024/08/04/16/486000238.png'],
+      ['CANAL+ COMEDIE', 'https://www12.0zz0.com/2024/08/04/16/959586212.png'],
+      ['CANAL+ FORMULA1', 'https://www12.0zz0.com/2024/08/04/16/948418337.png'],
+      ['CANAL+ ACTION', 'https://www3.0zz0.com/2024/08/03/21/543282630.png'],
+      ['CANAL+ POP', 'https://www10.0zz0.com/2024/08/03/21/704724425.png'],
+      ['CANAL+ DOCS', 'https://www4.0zz0.com/2024/08/02/19/480616564.png'],
+      ['CANAL+ CINEMA', 'https://www4.0zz0.com/2024/08/02/19/286861514.png'],
+      ['CANAL+ SERIES', 'https://www12.0zz0.com/2024/08/03/16/285854178.png'],
+      ['CANAL+ FAMILY', 'https://www11.0zz0.com/2024/08/02/19/221024550.png'],
+      ['CANAL+ FR', 'https://www4.0zz0.com/2024/08/02/19/401786475.png'],
+      ['CANAL+ KIDS', 'https://www9.0zz0.com/2024/08/02/19/330026206.png'],
+      ['CANAL+ 360', 'https://www9.0zz0.com/2024/08/02/19/626114773.png'],
+      ['SS PREMIER LEAGUE', 'https://www2.0zz0.com/2025/08/15/13/905714362.png'],
+      ['SS FOOTBALL', 'https://www2.0zz0.com/2025/08/15/13/152742633.png'],
+      ['SS MOTORSPORT', 'https://www2.0zz0.com/2025/08/15/13/141511663.png'],
+      ['SS GOLF', 'https://www2.0zz0.com/2025/08/15/13/682494829.png'],
+      ['SS ACTION', 'https://www2.0zz0.com/2025/08/15/13/844049238.png'],
+      ['SS BLITZ', 'https://www2.0zz0.com/2025/08/15/13/561539077.png'],
+      ['SS WWE', 'https://www2.0zz0.com/2025/08/15/13/426336615.png'],
+      ['SS AFRICA', 'https://www2.0zz0.com/2025/08/15/13/384864598.png'],
+      ['SS MAXIMO 2', 'https://www2.0zz0.com/2025/08/15/13/350963076.png'],
+      ['SS OTT 2', 'https://www2.0zz0.com/2025/08/15/13/238797531.png'],
+      ['SS OTT 3', 'https://www2.0zz0.com/2025/08/15/13/846811838.png'],
+      ['SS OTT 6', 'https://www2.0zz0.com/2025/08/15/13/479142142.png'],
+      ['SS OTT 7', 'https://www2.0zz0.com/2025/08/15/13/160994433.png'],
+      ['SS OTT 8', 'https://www2.0zz0.com/2025/08/15/13/815027801.png'],
+      ['AB1', 'https://www12.0zz0.com/2024/08/02/19/789320552.png'],
+      ['RMC SPORT 1', 'https://www11.0zz0.com/2024/08/03/16/305941677.png'],
+      ['RMC SPORT 2', 'https://www11.0zz0.com/2024/08/03/16/221945841.png'],
+      ['PASSION NOVELAS', 'https://www2.0zz0.com/2025/08/05/13/390688917.jpg'],
+      ['BUSINESS24', 'https://www10.0zz0.com/2024/08/02/17/673607618.png'],
+      ['C3 BENIN', 'https://www12.0zz0.com/2024/08/03/23/327574881.png'],
+      ['MEDIA 1', 'https://www12.0zz0.com/2024/08/03/23/662595454.png'],
+      ['AFRICANEWS', 'https://www12.0zz0.com/2024/08/03/23/490994309.png'],
+      ['BBLACK!', 'https://www6.0zz0.com/2024/08/03/23/921541920.png'],
+      ['AL BAYANE', 'https://www8.0zz0.com/2024/08/05/16/497310944.png'],
+      ['MOURIDE TV', 'https://www8.0zz0.com/2024/08/05/15/232140954.png'],
+      ['BFM TECH', 'https://www8.0zz0.com/2024/08/05/15/234659897.png'],
+      ['TELE MAROC', 'https://www8.0zz0.com/2024/08/05/15/976364627.png'],
+      ['DIRECT 7', 'https://www12.0zz0.com/2024/08/05/15/451472405.png'],
+      ['NOVELAS CH', 'https://www12.0zz0.com/2024/08/05/15/118839256.png'],
+      ['DBM', 'https://www12.0zz0.com/2024/08/05/15/296747703.png'],
+      ['LNTV', 'https://www12.0zz0.com/2024/08/05/15/217467258.png'],
+      ['BFM PARIS', 'https://www6.0zz0.com/2024/08/05/15/331132446.png'],
+      ['BFM VAR', 'https://www12.0zz0.com/2024/08/05/15/476524380.png'],
+      ['FRANCE 2', 'https://www12.0zz0.com/2024/08/03/23/833620670.png'],
+      ['RMC DISCO', 'https://www6.0zz0.com/2024/08/05/14/142988663.png'],
+      ['ALPHA OMEGA', 'https://www3.0zz0.com/2024/08/05/16/169556787.png'],
+      ['2M', 'https://www6.0zz0.com/2024/08/05/15/997547554.png'],
+      ['MADER TV', 'https://www8.0zz0.com/2024/08/05/15/680928644.png'],
+      ['BFM TV', 'https://www8.0zz0.com/2024/08/05/15/591571849.png'],
+      ['C DIRECT', 'https://www8.0zz0.com/2024/08/02/13/384973650.png'],
+      ['CAILLOU', 'https://www3.0zz0.com/2024/08/05/15/244770831.png'],
+      ['ETELE', 'https://www3.0zz0.com/2024/08/05/14/348101702.png'],
+      ['CGTV FRANCE', 'https://www3.0zz0.com/2024/08/05/14/802893392.png'],
+      ['M24', 'https://www6.0zz0.com/2024/08/05/14/702067846.png'],
+      ['FRANCE 3', 'https://www4.0zz0.com/2024/08/02/19/784108665.png'],
+      ['A+ BENIN', 'https://www3.0zz0.com/2024/08/05/16/216061406.png'],
+      ['ZEECINEMA', 'https://www3.0zz0.com/2024/08/05/16/495240930.png'],
+      ['BF1 TV', 'https://www12.0zz0.com/2024/08/02/11/106302678.png'],
+      ['ACTION', 'https://www4.0zz0.com/2024/08/02/19/946225045.png'],
+      ['OCS CHOC', 'https://www8.0zz0.com/2024/08/04/15/625086108.png'],
+      ['OCS GEANTS', 'https://www8.0zz0.com/2024/08/04/15/259223734.png'],
+      ['OCS MAX', 'https://www8.0zz0.com/2024/08/04/15/813772609.png'],
+      ['OCS PULP', 'https://www9.0zz0.com/2024/08/04/15/647155103.png'],
+      ['CINE+ PREMIER', 'https://www11.0zz0.com/2024/08/04/16/426250463.png'],
+      ['CINE+ CLUB', 'https://www11.0zz0.com/2024/08/04/16/968724458.png'],
+      ['CINE+', 'https://www5.0zz0.com/2024/08/04/16/647258077.png'],
+      ['CINE+ EMOTION', 'https://www5.0zz0.com/2024/08/04/16/725955039.png'],
+      ['LIFE TV', 'https://www3.0zz0.com/2024/08/02/17/898040584.png'],
+      ['CHRIST LIVE', 'https://www8.0zz0.com/2024/08/05/15/503457039.png'],
+      ['GUILLI', 'https://www12.0zz0.com/2024/08/05/15/362250090.png'],
+      ['OMEGA TV', 'https://www8.0zz0.com/2024/08/02/17/856891724.png'],
+      ['LERAL TV', 'https://www8.0zz0.com/2024/08/05/15/607622723.png'],
+      ['WALF TV', 'https://www11.0zz0.com/2024/08/05/15/156663833.png'],
+      ['CINAF', 'https://www11.0zz0.com/2024/08/05/15/552415747.png'],
+      ['SKY NEWS', 'https://www6.0zz0.com/2024/08/05/14/411724419.png'],
+      ['CRTV SPORTS', 'https://www6.0zz0.com/2024/08/03/23/996804151.png'],
+      ['CRTV NEWS', 'https://www6.0zz0.com/2024/08/03/23/866055109.png'],
+      ['CANAL 2', 'https://www11.0zz0.com/2024/08/02/12/251685056.png'],
+      ['W9', 'https://www11.0zz0.com/2024/08/03/16/993720971.png'],
+      ['NAT GEO', 'https://www11.0zz0.com/2024/08/03/16/769196937.png'],
+      ['ANIMAUX', 'https://www11.0zz0.com/2024/08/03/16/476399976.png'],
+      ['INVEST DISCO', 'https://www11.0zz0.com/2024/08/03/16/237328694.png'],
+      ['TFX', 'https://www4.0zz0.com/2024/08/02/19/731635967.png'],
+      ['HISTOIRE', 'https://www12.0zz0.com/2024/08/03/16/532612868.png'],
+      ['TMC', 'https://www12.0zz0.com/2024/08/03/16/470499914.png'],
+      ['RTL9', 'https://www6.0zz0.com/2024/08/03/17/252524174.png'],
+      ['NAT GEO WILD', 'https://www3.0zz0.com/2024/08/03/17/301082467.png'],
+      ['VOX AFRICA', 'https://www12.0zz0.com/2024/08/03/21/575996831.png'],
+      ['M6', 'https://www4.0zz0.com/2024/08/02/19/632774996.png'],
+      ['ARTE', 'https://www4.0zz0.com/2024/08/02/19/730659120.png'],
+      ['FRANCE 5', 'https://www12.0zz0.com/2024/08/02/19/273842748.png'],
+      ['CNEWS', 'https://www12.0zz0.com/2024/08/03/23/726180874.png'],
+      ['I24', 'https://www12.0zz0.com/2024/08/03/23/306743068.png'],
+      ['B-ONE', 'https://www3.0zz0.com/2024/08/03/23/615808054.png'],
+      ['TIVI5', 'https://www3.0zz0.com/2024/08/03/23/543136644.png'],
+      ['TRACE TERANGA', 'https://www3.0zz0.com/2024/08/03/23/357295681.png'],
+      ['CANAL+ PL', 'https://www3.0zz0.com/2024/08/03/23/797004496.png'],
+      ['TRACE TROPICAL', 'https://www8.0zz0.com/2024/08/03/23/543547411.png'],
+      ['13EME RUE', 'https://www8.0zz0.com/2024/08/03/23/960654091.png'],
+      ['ARWA24', 'https://www9.0zz0.com/2024/08/03/23/157251746.png'],
+      ['CRIME DIST', 'https://www12.0zz0.com/2024/08/04/11/970595559.png'],
+      ['MTV HITS', 'https://www12.0zz0.com/2024/08/04/11/814588157.png'],
+      ['NATHAN TV', 'https://www12.0zz0.com/2024/08/04/11/612809235.png'],
+      ['TRACE AFRIKOR', 'https://www12.0zz0.com/2024/08/04/11/579418691.png'],
+      ['NICKELODEON JR', 'https://www12.0zz0.com/2024/08/04/11/924910335.png'],
+      ['CUISINE.TV', 'https://www7.0zz0.com/2024/08/04/11/716283389.png'],
+      ['E!', 'https://www7.0zz0.com/2024/08/04/11/455258145.png'],
+      ['TREK', 'https://www11.0zz0.com/2024/08/04/11/368368807.png'],
+      ['TRACE GOSPEL', 'https://www12.0zz0.com/2024/08/04/11/542272144.png'],
+      ['DSTV', 'https://www6.0zz0.com/2024/08/02/13/551934770.png'],
+      ['SEN TV', 'https://www3.0zz0.com/2024/08/02/13/311097832.png'],
+      ['TFM', 'https://www3.0zz0.com/2024/08/02/13/942658676.png'],
+      ['SUNU YEUF', 'https://www8.0zz0.com/2024/08/02/13/785865116.png'],
+      ['3TV', 'https://www12.0zz0.com/2024/08/02/17/597677958.png'],
+      ['SAVANE TV', 'https://www12.0zz0.com/2024/08/02/17/279635078.png'],
+      ['CVK', 'https://www10.0zz0.com/2024/08/02/17/453115313.png'],
+      ['CANAL3', 'https://www10.0zz0.com/2024/08/02/17/717904421.png'],
+      ['TVZ AFRICA', 'https://www10.0zz0.com/2024/08/02/17/966120198.png'],
+      ['IMPACT TV', 'https://www12.0zz0.com/2024/08/02/17/556324312.png'],
+      ['LCA', 'https://www12.0zz0.com/2024/08/02/17/522564291.png'],
+      ['GO AFRICA', 'https://www3.0zz0.com/2024/08/02/17/387005080.png'],
+      ['GABON CULT', 'https://www3.0zz0.com/2024/08/02/17/510326615.png'],
+      ['7INFO', 'https://www3.0zz0.com/2024/08/02/17/763768188.png'],
+      ['GABON 1ERE', 'https://www3.0zz0.com/2024/08/02/17/819594372.png'],
+      ['PIWI+', 'https://www3.0zz0.com/2024/08/04/11/109156741.png'],
+      ['DISNEY JR', 'https://www3.0zz0.com/2024/08/04/11/493516697.png'],
+      ['RTNC', 'https://www7.0zz0.com/2024/08/04/11/104445686.png'],
+      ['TIJI', 'https://www7.0zz0.com/2024/08/04/11/565727051.png'],
+      ['MEZZO', 'https://www7.0zz0.com/2024/08/04/11/540441399.png'],
+      ['NICKELODEON', 'https://www10.0zz0.com/2024/08/04/11/731396589.png'],
+      ['SCIENCE&VIE', 'https://www10.0zz0.com/2024/08/04/11/793716263.png'],
+      ['BBC WN', 'https://www10.0zz0.com/2024/08/04/11/782380871.png'],
+      ['CSTAR', 'https://www11.0zz0.com/2024/08/04/11/641202747.png'],
+      ['ANTENNE TV', 'https://www11.0zz0.com/2024/08/04/11/849275723.png'],
+      ['LIBIDO', 'https://www12.0zz0.com/2024/08/04/11/925028759.png'],
+      ['EMCI', 'https://www4.0zz0.com/2024/08/04/11/207590336.png'],
+      ['DORCEL TV', 'https://www2.0zz0.com/2025/07/23/16/564258556.png'],
+      ['DORCEL AFRICA', 'https://www2.0zz0.com/2025/07/23/16/921996585.png']
+    ];
+
+    var PREMIUM_SERIES = [
+      ['AMAZON PRIME', 'https://www5.0zz0.com/2024/08/04/16/884545934.png', 1, 10],
+      ['SKY SPORT',    'https://www3.0zz0.com/2024/08/04/16/116137231.png', 1, 10],
+      ['NETFLIX',      'https://www3.0zz0.com/2024/08/04/16/161723930.png', 1, 10],
+      ['RMC SPORT',    'https://www2.0zz0.com/2025/07/20/09/284194548.png', 3, 8],
+      ['CANAL+ LIVE',  'https://www2.0zz0.com/2025/07/20/08/349254527.png', 1, 19],
+      ['DAZN',         'https://www2.0zz0.com/2025/07/20/08/659503761.png', 1, 10],
+      ['ADULT TV',     'https://www5.0zz0.com/2024/08/04/16/239998957.png', 1, 15]
+    ];
+
+    var CATEGORIES = [
+      { id: 'all',     label: 'Toutes',          icon: 'fa-border-all' },
+      { id: 'fav',     label: 'Favoris',         icon: 'fa-star' },
+      { id: 'free',    label: 'Gratuites',       icon: 'fa-gift' },
+      { id: 'sport',   label: 'Sport',           icon: 'fa-futbol' },
+      { id: 'cinema',  label: 'Cinéma & Séries', icon: 'fa-film' },
+      { id: 'info',    label: 'Info',            icon: 'fa-newspaper' },
+      { id: 'general', label: 'Généralistes',    icon: 'fa-tv' },
+      { id: 'kids',    label: 'Jeunesse',        icon: 'fa-child-reaching' },
+      { id: 'music',   label: 'Musique',         icon: 'fa-music' },
+      { id: 'docs',    label: 'Découverte',      icon: 'fa-earth-africa' },
+      { id: 'adult',   label: '18+',             icon: 'fa-ban' }
+    ];
+    var CAT_RULES = [
+      ['adult',  /ADULT|DORCEL|LIBIDO/],
+      ['kids',   /KIDS|DISNEY|NICKELODEON|PIWI|TIJI|GUILLI|CAILLOU|NATHAN|FAMILY/],
+      ['sport',  /SPORT|BEIN|DAZN|^SS |EUROSPORT|MOTOGP|FORMULA|FIFA|CANAL\+ LIVE|CANAL\+ PL/],
+      ['music',  /TRACE|MTV|MUSIK|MEZZO|BBLACK|B-ONE/],
+      ['docs',   /DOCS|NAT GEO|ANIMAUX|HISTOIRE|SCIENCE|TREK|DISCO|CUISINE|INVEST/],
+      ['info',   /INFO|NEWS|24|BFM|CNEWS|I24|BBC|CGTV|M24|LCA|DIRECT 7|C DIRECT|ECONOMIE|BUSINESS|MEDIA 1/],
+      ['cinema', /CINE|SERIES|NOVELA|NOLLY|MAGIC|OCS|NETFLIX|AMAZON|SYFY|13EME|CRIME|ACTION|COMEDIE|POP|TFX|RTL9|ZEE|CINAF|ELLES|^E!$|^W9$/]
+    ];
+    function categorize(name) {
+      var up = name.toUpperCase();
+      for (var i = 0; i < CAT_RULES.length; i++) if (CAT_RULES[i][1].test(up)) return CAT_RULES[i][0];
+      return 'general';
+    }
+    function catLabel(id) {
+      for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].id === id) return CATEGORIES[i].label;
+      return '';
+    }
+
+    function norm(s) {
+      return String(s)
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9+]/g, '');
+    }
+
+    var CHANNELS = [];
+    FREE.forEach(function (c) { CHANNELS.push({ name: c.name, img: c.img, url: c.url, free: true }); });
+    PREMIUM.forEach(function (c) { CHANNELS.push({ name: c[0], img: c[1], free: false }); });
+    PREMIUM_SERIES.forEach(function (s) {
+      for (var n = s[2]; n <= s[3]; n++) CHANNELS.push({ name: s[0] + ' ' + n, img: s[1], free: false });
+    });
+    CHANNELS.forEach(function (c, i) { c.id = i; c.cat = categorize(c.name); c.key = norm(c.name); });
+    var FREE_LIST = CHANNELS.filter(function (c) { return c.free; });
+    var PREMIUM_COUNT = CHANNELS.length - FREE_LIST.length;
+    function $(id) { return document.getElementById(id); }
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+      });
+    }
+
+    function initials(name) {
+      return name
+        .replace(/[^A-Za-z0-9+ ]/g, '')
+        .split(' ')
+        .slice(0, 2)
+        .map(function (w) { return w.charAt(0); })
+        .join('')
+        .toUpperCase();
+    }
+
+    function waLink(text) {
+      return 'https://wa.me/' + CONFIG.whatsappNumber + '?text=' + encodeURIComponent(text);
+    }
+    var store = {
+      get: function (k, d) { try { var v = localStorage.getItem('ab_' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+      set: function (k, v) { try { localStorage.setItem('ab_' + k, JSON.stringify(v)); } catch (e) {} }
+    };
+
+    /* =========================================================
+       TOAST
+       ========================================================= */
+    var toastTimer;
+    function toast(msg, type) {
+      var t = $('toast');
+      t.textContent = msg;
+      t.className = 'toast show' + (type ? ' ' + type : '');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { t.className = 'toast'; }, 2600);
+    }
+
+    /* =========================================================
+       DÉTECTION PAYS + DEVISE
+       ========================================================= */
+    function detectCountryCode() {
+      try {
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+        var map = {
+          'Africa/Ouagadougou': 'BF',
+          'Africa/Abidjan': 'CI',
+          'Africa/Dakar': 'SN',
+          'Africa/Bamako': 'ML',
+          'Africa/Porto-Novo': 'BJ',
+          'Africa/Lome': 'TG',
+          'Africa/Niamey': 'NE'
+        };
+        for (var key in map) {
+          if (tz.indexOf(key) !== -1) return map[key];
+        }
+      } catch (e) {}
+      return 'US';
+    }
+
+    function getCountryCode() {
+      var saved = store.get('country', 'AUTO');
+      if (saved !== 'AUTO' && COUNTRIES[saved]) return saved;
+      return detectCountryCode();
+    }
+    function getCountry() { return COUNTRIES[getCountryCode()] || COUNTRIES.US; }
+
+    // Prix en texte simple, dans la devise du pays choisi
+    function priceText(fcfa) {
+      var c = getCountry();
+      var val = fcfa * c.rate;
+      var str = c.decimals === 0
+        ? String(Math.round(val)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+        : (Math.round(val * 100) / 100).toFixed(c.decimals).replace('.', ',');
+      return str + ' ' + c.currency;
+    }
+
+    function trackPlanSelect(offer) {
+      try {
+        if (window.gtag) {
+          window.gtag('event', 'select_plan', {
+            plan: offer.duration,
+            price: offer.price,
+            method: 'chariow',
+            country: getCountryCode()
+          });
+        }
+      } catch (e) {}
+    }
+
+    var state = {
+      filter: 'all',
+      query: '',
+      favs: store.get('favs', []),
+      current: null,
+      locked: null,
+      offer: (function () {
+        var saved = store.get('offer', CONFIG.defaultOffer);
+        return (typeof saved === 'number' && saved >= 0 && saved < OFFERS.length)
+          ? saved
+          : CONFIG.defaultOffer;
+      })()
+    };
+
+    /* =========================================================
+       LECTEUR
+       ========================================================= */
+    var Player = (function () {
+      var video = $('video');
+      var box = $('player');
+      var hls = null, url = null;
+      var netRetry = 0, mediaRetry = 0;
+      var retryTimer = null, stallTimer = null;
+      var onFail = function () {};
+
+      function setState(s, text) {
+        box.setAttribute('data-state', s);
+        if (text) $('loaderText').textContent = text;
+        $('btnPlay').innerHTML = '<i class="fas ' + (s === 'paused' ? 'fa-play' : 'fa-pause') + '"></i>';
+      }
+      function clearTimers() { clearTimeout(retryTimer); clearTimeout(stallTimer); }
+      function destroy() {
+        clearTimers();
+        if (hls) { hls.destroy(); hls = null; }
+        video.removeAttribute('src');
+        try { video.load(); } catch (e) {}
+      }
+      function armStall() {
+        clearTimeout(stallTimer);
+        stallTimer = setTimeout(function () { retry(); }, CONFIG.streamTimeout);
+      }
+
+      function attach() {
+        armStall();
+        if (window.Hls && Hls.isSupported()) {
+          hls = new Hls({
+            enableWorker: true,
+            capLevelToPlayerSize: true,
+            startLevel: -1,
+            maxBufferLength: 30,
+            backBufferLength: 20,
+            liveSyncDurationCount: 3,
+            manifestLoadingMaxRetry: 2,
+            levelLoadingMaxRetry: 3,
+            fragLoadingMaxRetry: 4
+          });
+          hls.on(Hls.Events.MANIFEST_PARSED, function (e, data) { buildQuality(data.levels); play(); });
+          hls.on(Hls.Events.ERROR, function (e, data) {
+            if (!data.fatal) return;
+            if (data.type === Hls.ErrorTypes.MEDIA_ERROR && mediaRetry < 2) {
+              mediaRetry++;
+              hls.recoverMediaError();
+            } else {
+              retry();
+            }
+          });
+          hls.loadSource(url);
+          hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          buildQuality([]);
+          video.src = url;
+          play();
+        } else {
+          fail();
+        }
+      }
+
+      function retry() {
+        if (!url) return;
+        clearTimers();
+        if (netRetry >= CONFIG.maxRetries) return fail();
+        netRetry++;
+        setState('reconnecting', 'Reconnexion… (' + netRetry + '/' + CONFIG.maxRetries + ')');
+        if (hls) { hls.destroy(); hls = null; }
+        retryTimer = setTimeout(attach, Math.min(800 * Math.pow(2, netRetry - 1), 6000));
+      }
+
+      function fail() {
+        clearTimers();
+        if (hls) { hls.destroy(); hls = null; }
+        setState('error');
+        onFail();
+      }
+
+      function play() {
+        var p = video.play();
+        if (p && p.catch) {
+          p.catch(function () {
+            video.muted = true;
+            box.classList.add('is-muted-auto');
+            video.play().catch(function () { setState('paused'); });
+          });
+        }
+      }
+
+      function buildQuality(levels) {
+        var sel = $('quality');
+        if (!levels || levels.length < 2) { sel.hidden = true; return; }
+        var html = '<option value="-1">Auto</option>';
+        levels.map(function (l, i) { return { i: i, h: l.height || 0, b: l.bitrate || 0 }; })
+          .sort(function (a, b) { return b.h - a.h || b.b - a.b; })
+          .forEach(function (l) {
+            html += '<option value="' + l.i + '">' + (l.h ? l.h + 'p' : Math.round(l.b / 1000) + ' kb/s') + '</option>';
+          });
+        sel.innerHTML = html;
+        sel.hidden = false;
+      }
+
+      video.addEventListener('playing', function () {
+        clearTimers(); netRetry = 0; mediaRetry = 0; setState('playing');
+      });
+      video.addEventListener('waiting', function () {
+        if (box.getAttribute('data-state') === 'error') return;
+        setState('loading', 'Mise en mémoire…');
+        armStall();
+      });
+      video.addEventListener('pause', function () {
+        if (!video.ended && box.getAttribute('data-state') === 'playing') setState('paused');
+      });
+      video.addEventListener('error', function () { if (url && !hls) retry(); });
+      video.addEventListener('volumechange', function () {
+        var muted = video.muted || video.volume === 0;
+        $('btnMute').innerHTML = '<i class="fas ' + (muted ? 'fa-volume-xmark' : video.volume < .5 ? 'fa-volume-low' : 'fa-volume-high') + '"></i>';
+        $('volume').value = video.muted ? 0 : video.volume;
+        if (!video.muted) box.classList.remove('is-muted-auto');
+        store.set('vol', { v: video.volume, m: video.muted });
+      });
+      video.addEventListener('timeupdate', function () {
+        var behind = false;
+        if (hls && hls.liveSyncPosition) behind = hls.liveSyncPosition - video.currentTime > 20;
+        $('btnLive').classList.toggle('is-behind', behind);
+      });
+
+      return {
+        video: video,
+        load: function (u) {
+          destroy(); url = u; netRetry = 0; mediaRetry = 0;
+          setState('loading', 'Chargement…');
+          attach();
+        },
+        stop: function () { destroy(); url = null; },
+        reload: function () { if (url) this.load(url); },
+        toggle: function () {
+          if (box.getAttribute('data-state') === 'error') return this.reload();
+          if (video.paused) play(); else video.pause();
+        },
+        goLive: function () {
+          if (hls && hls.liveSyncPosition) video.currentTime = hls.liveSyncPosition;
+          else if (video.seekable.length) video.currentTime = video.seekable.end(video.seekable.length - 1) - 2;
+          play();
+        },
+        setQuality: function (v) { if (hls) hls.currentLevel = parseInt(v, 10); },
+        onFail: function (fn) { onFail = fn; },
+        pause: function () { video.pause(); }
+      };
+    })();
+
+    var playerBox = $('player');
+    var video = Player.video;
+    var hideTimer;
+
+    (function restoreVolume() {
+      var v = store.get('vol', null);
+      if (v) { video.volume = v.v; video.muted = v.m; }
+    })();
+
+    function showControls() {
+      playerBox.classList.remove('controls-hidden');
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(function () {
+        var focusInside = playerBox.contains(document.activeElement) && document.activeElement !== playerBox;
+        if (playerBox.getAttribute('data-state') === 'playing' && !focusInside) {
+          playerBox.classList.add('controls-hidden');
+        }
+      }, 3500);
+    }
+    ['mousemove', 'touchstart', 'focusin'].forEach(function (ev) { playerBox.addEventListener(ev, showControls, { passive: true }); });
+
+    var lastTap = 0;
+    video.addEventListener('click', function () {
+      var now = Date.now();
+      if (now - lastTap < 300) toggleFullscreen();
+      else if (playerBox.classList.contains('controls-hidden')) showControls();
+      else if (window.matchMedia('(hover: hover)').matches) Player.toggle();
+      lastTap = now;
+    });
+
+    $('btnPlay').onclick = function () { Player.toggle(); };
+    $('bigPlay').onclick = function () { Player.toggle(); };
+    $('btnMute').onclick = function () { video.muted = !video.muted; if (!video.muted && video.volume === 0) video.volume = .6; };
+    $('unmute').onclick = function () { video.muted = false; if (video.volume === 0) video.volume = .8; };
+    $('volume').oninput = function (e) { video.volume = parseFloat(e.target.value); video.muted = video.volume === 0; };
+    $('btnLive').onclick = function () { Player.goLive(); };
+    $('quality').onchange = function (e) { Player.setQuality(e.target.value); };
+    $('btnPrev').onclick = function () { zap(-1); };
+    $('btnNext').onclick = function () { zap(1); };
+    $('btnFs').onclick = toggleFullscreen;
+
+    if (document.pictureInPictureEnabled) {
+      $('btnPip').hidden = false;
+      $('btnPip').onclick = function () {
+        if (document.pictureInPictureElement) document.exitPictureInPicture();
+        else video.requestPictureInPicture().catch(function () {});
+      };
+    }
+
+    function isFullscreen() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+    function toggleFullscreen() {
+      if (isFullscreen()) {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        return;
+      }
+      var req = playerBox.requestFullscreen || playerBox.webkitRequestFullscreen;
+      if (req) {
+        var p = req.call(playerBox);
+        if (p && p.then) p.then(function () {
+          if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(function () {});
+        }).catch(function () {});
+      } else if (video.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen();
+      }
+    }
+    function onFsChange() {
+      var fs = isFullscreen();
+      playerBox.classList.toggle('is-fullscreen', fs);
+      $('btnFs').innerHTML = '<i class="fas ' + (fs ? 'fa-compress' : 'fa-expand') + '"></i>';
+    }
+    document.addEventListener('fullscreenchange', onFsChange);
+    document.addEventListener('webkitfullscreenchange', onFsChange);
+
+    Player.onFail(function () { $('errorPanel').classList.add('show'); });
+    $('btnRetry').onclick = function () { $('errorPanel').classList.remove('show'); Player.reload(); };
+    $('btnSkip').onclick = function () { zap(1); };
+
+    window.addEventListener('offline', function () { toast('Connexion internet perdue', 'error'); });
+    window.addEventListener('online', function () {
+      toast('Connexion rétablie', 'success');
+      if (state.current && !state.locked) { $('errorPanel').classList.remove('show'); Player.reload(); }
+    });
+
+    function selectChannel(ch) {
+      if (!ch) return;
+      if (!ch.free) return showLock(ch);
+      hideLock(false);
+      $('errorPanel').classList.remove('show');
+      state.current = ch;
+      store.set('last', ch.name);
+      Player.load(ch.url);
+      updateNow(ch);
+      markActive();
+      showControls();
+    }
+
+    function zap(dir) {
+      var i = state.current ? FREE_LIST.indexOf(state.current) : -1;
+      var next = FREE_LIST[(i + dir + FREE_LIST.length) % FREE_LIST.length];
+      selectChannel(next);
+      toast(next.name);
+    }
+
+    function updateNow(ch) {
+      $('nowLogo').src = ch.img;
+      $('nowName').textContent = ch.name;
+      $('nowCat').textContent = catLabel(ch.cat);
+      $('badgeLogo').src = ch.img;
+      $('badgeName').textContent = ch.name;
+      document.title = ch.name + ' · Africa Box';
+      var fav = state.favs.indexOf(ch.name) !== -1;
+      $('btnFav').classList.toggle('is-on', fav);
+      $('btnFav').innerHTML = '<i class="' + (fav ? 'fas' : 'far') + ' fa-star"></i>';
+      $('btnFav').setAttribute('aria-label', fav ? 'Retirer des favoris' : 'Ajouter aux favoris');
+    }
+
+    function markActive() {
+      var prev = document.querySelector('.card.is-active');
+      if (prev) prev.classList.remove('is-active');
+      var shown = state.locked || state.current;
+      if (!shown) return;
+      var el = document.querySelector('.card[data-id="' + shown.id + '"]');
+      if (el) el.classList.add('is-active');
+    }
+
+    function minPerMonthText() {
+      return priceText(Math.min.apply(null, OFFERS.map(function (o) { return o.perMonth; })));
+    }
+
+    function showLock(ch) {
+      state.locked = ch;
+      Player.pause();
+      $('errorPanel').classList.remove('show');
+      $('lockLogo').src = ch.img;
+      $('lockTitle').textContent = ch.name;
+      $('lockText').textContent = 'Regardez ' + ch.name + ' et ' + (PREMIUM_COUNT - 1) + ' autres chaînes premium.';
+      $('lockPrice').textContent = 'Dès ' + minPerMonthText() + '/mois · satisfait ou remboursé 7 jours';
+      $('lockPanel').classList.add('show');
+      updateNow(ch);
+      markActive();
+      if (window.scrollY > 0 && window.matchMedia('(max-width: 899px)').matches) window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(function () { $('btnUnlock').focus({ preventScroll: true }); }, 50);
+    }
+    function hideLock(resume) {
+      if (!state.locked) return;
+      state.locked = null;
+      $('lockPanel').classList.remove('show');
+      if (resume && state.current) selectChannel(state.current);
+    }
+    $('lockClose').onclick = function () { hideLock(true); };
+    $('btnUnlock').onclick = function () { openSheet(state.locked); };
+
+    $('btnFav').onclick = function () {
+      var ch = state.locked || state.current;
+      if (!ch) return;
+      var i = state.favs.indexOf(ch.name);
+      if (i === -1) { state.favs.push(ch.name); toast('Ajoutée aux favoris', 'success'); }
+      else { state.favs.splice(i, 1); toast('Retirée des favoris'); }
+      store.set('favs', state.favs);
+      updateNow(ch);
+      renderChips();
+      renderGrid();
+    };
+
+    function matches(ch) {
+      if (state.filter === 'fav') return state.favs.indexOf(ch.name) !== -1;
+      if (state.filter === 'free') return ch.free;
+      if (state.filter === 'all') return ch.cat !== 'adult';
+      return ch.cat === state.filter;
+    }
+
+    function renderChips() {
+      var html = '';
+      CATEGORIES.forEach(function (c) {
+        var count = CHANNELS.filter(function (ch) {
+          if (c.id === 'fav') return state.favs.indexOf(ch.name) !== -1;
+          if (c.id === 'free') return ch.free;
+          if (c.id === 'all') return ch.cat !== 'adult';
+          return ch.cat === c.id;
+        }).length;
+        if (!count && c.id !== 'all' && c.id !== 'fav') return;
+        html += '<button class="chip' + (state.filter === c.id ? ' is-active' : '') + '" data-filter="' + c.id + '">' +
+          '<i class="fas ' + c.icon + '"></i>' + c.label + ' <small>' + count + '</small></button>';
+      });
+      $('chips').innerHTML = html;
+    }
+
+    function renderGrid() {
+      var q = norm(state.query);
+      var list = CHANNELS.filter(function (ch) {
+        if (q) return ch.key.indexOf(q) !== -1 && (ch.cat !== 'adult' || state.filter === 'adult');
+        return matches(ch);
+      });
+      list.sort(function (a, b) { return (b.free - a.free) || (a.id - b.id); });
+
+      var favSet = {};
+      state.favs.forEach(function (n) { favSet[n] = true; });
+
+      if (!list.length) {
+        $('grid').innerHTML = '<div class="empty"><i class="fas ' + (state.filter === 'fav' && !q ? 'fa-star' : 'fa-magnifying-glass') + '"></i>' +
+          (state.filter === 'fav' && !q ? 'Aucun favori pour le moment.<br>Touchez ★ sous le lecteur pour en ajouter.' : 'Aucune chaîne trouvée.') + '</div>';
+      } else {
+        var html = '';
+        for (var i = 0; i < list.length; i++) {
+          var ch = list[i];
+          html += '<button class="card ' + (ch.free ? 'is-free' : 'is-premium') + '" data-id="' + ch.id + '" aria-label="' + esc(ch.name) + (ch.free ? '' : ', premium') + '">' +
+            (favSet[ch.name] ? '<i class="fas fa-star fav"></i>' : '') +
+            '<span class="thumb"><img loading="lazy" decoding="async" src="' + esc(ch.img) + '" alt="" data-ini="' + esc(initials(ch.name)) + '"></span>' +
+            '<span class="name">' + esc(ch.name) + '</span>' +
+            (ch.free ? '<span class="tag tag-free">Gratuit</span>' : '<span class="tag tag-premium"><i class="fas fa-crown"></i> Premium</span>') +
+            '</button>';
+        }
+        $('grid').innerHTML = html;
+      }
+      $('resultInfo').textContent = list.length + ' chaîne' + (list.length > 1 ? 's' : '') + (q ? ' pour « ' + state.query + ' »' : '');
+      markActive();
+    }
+
+    $('grid').addEventListener('error', function (e) {
+      var img = e.target;
+      if (img.tagName !== 'IMG') return;
+      var span = document.createElement('span');
+      span.className = 'initials';
+      span.textContent = img.getAttribute('data-ini');
+      img.parentNode.replaceChild(span, img);
+    }, true);
+
+    $('grid').addEventListener('click', function (e) {
+      var card = e.target.closest('.card');
+      if (card) selectChannel(CHANNELS[+card.getAttribute('data-id')]);
+    });
+    $('chips').addEventListener('click', function (e) {
+      var chip = e.target.closest('.chip');
+      if (!chip) return;
+      state.filter = chip.getAttribute('data-filter');
+      renderChips();
+      renderGrid();
+      var active = $('chips').querySelector('.is-active');
+      if (active) active.focus({ preventScroll: true });
+    });
+
+    var searchTimer;
+    $('search').addEventListener('input', function (e) {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () { state.query = e.target.value.trim(); renderGrid(); }, 120);
+    });
+
+    /* =========================================================
+       FEUILLE DES OFFRES — un seul écran
+       ========================================================= */
+    var lastFocus = null;
+
+    function renderPlans() {
+      var c = getCountry();
+      var html = '';
+      OFFERS.forEach(function (o, i) {
+        var pct = o.savings ? Math.round(o.savings / (o.price + o.savings) * 100) : 0;
+        var priceNum = priceText(o.price).replace(' ' + c.currency, '');
+        html += '<button class="plan" role="radio" aria-checked="' + (i === state.offer) + '" data-i="' + i + '">' +
+          (o.ribbon ? '<span class="ribbon' + (o.gold ? ' gold' : '') + '">' + o.ribbon + '</span>' : '') +
+          '<span class="radio"></span>' +
+          '<span class="p-icon"><i class="fas ' + o.icon + '"></i></span>' +
+          '<span class="p-dur">' + o.duration + '</span>' +
+          '<span class="p-price">' + priceNum + ' <small>' + c.currency + '</small></span>' +
+          '<span class="p-month">soit ' + priceText(o.perMonth) + '/mois</span>' +
+          '<span class="p-save">' + (pct ? '−' + pct + ' %' : '') + '</span>' +
+          '<span class="p-dev"><i class="fas fa-display"></i>' + o.devices + '</span>' +
+          '</button>';
+      });
+      $('plans').innerHTML = html;
+    }
+
+    // Un seul bouton : paiement Chariow (Mobile Money ou carte)
+    function renderPayment() {
+      var o = OFFERS[state.offer];
+      var btn = $('btnPay');
+      btn.href = o.chariow;
+      btn.innerHTML =
+        '<span class="pay-main"><i class="fas fa-lock"></i>Payer ' + priceText(o.price) + '</span>' +
+        '<span class="pay-sub">Paiement sécurisé · Premium ' + o.duration + '</span>';
+    }
+
+    function selectPlan(i) {
+      state.offer = i;
+      store.set('offer', i);
+      [].forEach.call($('plans').children, function (el, k) { el.setAttribute('aria-checked', k === i); });
+      renderPayment();
+    }
+
+    function updateStickySub() {
+      $('stickyCtaSub').textContent = 'Dès ' + minPerMonthText() + '/mois · 7 jours garantis';
+    }
+
+    var REVIEWS = [
+      { name: 'Aminata K.', city: 'Ouagadougou', stars: 5, text: 'Super qualité, je regarde le foot sans coupure. Activation rapide en 5 minutes.' },
+      { name: 'Ibrahim T.', city: 'Abidjan', stars: 5, text: 'J\'ai pris 6 mois, toute la famille regarde Canal+ et les chaînes jeunesse. Top.' },
+      { name: 'Fatou D.', city: 'Dakar', stars: 5, text: 'Le paiement est simple, on m\'a activé tout de suite. Je recommande.' },
+      { name: 'Moussa B.', city: 'Bamako', stars: 4, text: 'Bon rapport qualité prix. Quelques coupures parfois mais rien de méchant.' },
+      { name: 'Awa S.', city: 'Cotonou', stars: 5, text: 'Plus de 500 chaînes, c\'est impressionnant. Netflix et Canal+ marchent bien.' }
+    ];
+    var reviewIdx = 0;
+    function renderReview() {
+      var r = REVIEWS[reviewIdx % REVIEWS.length];
+      $('revAvatar').textContent = r.name.charAt(0);
+      $('revName').textContent = r.name + ' · ' + r.city;
+      $('revStars').textContent = '★★★★★'.slice(0, r.stars) + '☆☆☆☆☆'.slice(0, 5 - r.stars);
+      $('revText').textContent = r.text;
+    }
+    setInterval(function () {
+      if (sheetOpen()) { reviewIdx++; renderReview(); }
+    }, 4500);
+
+    function openSheet(ch) {
+      lastFocus = document.activeElement;
+      $('sheetSub').textContent = ch
+        ? 'Débloquez ' + ch.name + ' et toutes les chaînes premium.'
+        : 'Débloquez les ' + PREMIUM_COUNT + ' chaînes premium.';
+      $('countrySelect').value = store.get('country', 'AUTO');
+      $('sheet').querySelector('.sheet-body').scrollTop = 0;
+      selectPlan(state.offer);
+      renderReview();
+      document.body.classList.add('sheet-open');
+      setTimeout(function () {
+        var sel = $('plans').querySelector('[aria-checked="true"]');
+        if (sel) sel.focus({ preventScroll: true });
+      }, 60);
+    }
+    function closeSheet() {
+      document.body.classList.remove('sheet-open');
+      if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+    }
+    function sheetOpen() { return document.body.classList.contains('sheet-open'); }
+
+    $('plans').addEventListener('click', function (e) {
+      var p = e.target.closest('.plan');
+      if (!p) return;
+      var i = +p.getAttribute('data-i');
+      // Entrée au clavier/télécommande sur l'offre déjà choisie → aller au bouton Payer
+      if (i === state.offer && e.detail === 0) { $('btnPay').focus(); return; }
+      selectPlan(i);
+    });
+    $('sheetClose').onclick = closeSheet;
+    $('sheetBackdrop').onclick = closeSheet;
+
+    $('countrySelect').addEventListener('change', function () {
+      store.set('country', this.value);
+      renderPlans();
+      selectPlan(state.offer);
+      updateStickySub();
+    });
+
+    // Suivi du clic de paiement
+    $('btnPay').addEventListener('click', function () {
+      trackPlanSelect(OFFERS[state.offer]);
+      toast('Ouverture du paiement…');
+    });
+
+    // Points d'entrée vers les offres : en-tête (grand écran), CTA collant (mobile), panneau "Débloquer"
+    $('btnHeaderPremium').onclick = function () { openSheet(null); };
+    $('stickyCta').addEventListener('click', function () { openSheet(null); });
+
+    (function () {
+      var sheet = $('sheet'), startY = null, dy = 0;
+      sheet.addEventListener('touchstart', function (e) {
+        if (sheet.querySelector('.sheet-body').scrollTop > 0) return;
+        startY = e.touches[0].clientY; dy = 0;
+      }, { passive: true });
+      sheet.addEventListener('touchmove', function (e) {
+        if (startY === null) return;
+        dy = e.touches[0].clientY - startY;
+        if (dy > 0 && window.innerWidth < 760) sheet.style.transform = 'translateY(' + dy + 'px)';
+      }, { passive: true });
+      sheet.addEventListener('touchend', function () {
+        if (startY === null) return;
+        sheet.style.transform = '';
+        if (dy > 110 && window.innerWidth < 760) closeSheet();
+        startY = null;
+      });
+    })();
+
+    /* =========================================================
+       CLAVIER / TÉLÉCOMMANDE
+       ========================================================= */
+    var KEY = {
+      LEFT: [37], UP: [38], RIGHT: [39], DOWN: [40],
+      OK: [13],
+      BACK: [27, 8, 10009, 461],
+      CH_UP: [33, 427], CH_DOWN: [34, 428],
+      PLAY_PAUSE: [179, 415, 19, 10252]
+    };
+    function is(code, list) { return list.indexOf(code) !== -1; }
+
+    function focusables(scope) {
+      return [].filter.call(scope.querySelectorAll('button, a[href], input, select, [tabindex="0"]'), function (el) {
+        if (el.disabled || el.hidden) return false;
+        var r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
+      });
+    }
+
+    function moveFocus(dir) {
+      var scope = sheetOpen() ? $('sheet') : document.body;
+      var items = focusables(scope);
+      var cur = document.activeElement;
+      if (!cur || cur === document.body || items.indexOf(cur) === -1) {
+        var start = scope.querySelector('.card.is-active') || scope.querySelector('.plan[aria-checked="true"]') || items[0];
+        if (start) start.focus();
+        return;
+      }
+      var a = cur.getBoundingClientRect();
+      var ax = a.left + a.width / 2, ay = a.top + a.height / 2;
+      var best = null, bestScore = Infinity;
+      items.forEach(function (el) {
+        if (el === cur) return;
+        var b = el.getBoundingClientRect();
+        var bx = b.left + b.width / 2, by = b.top + b.height / 2;
+        var dx = bx - ax, dy = by - ay, main, cross;
+        if (dir === 'left')  { if (b.right > a.left + 2) return; main = -dx; cross = Math.abs(dy); }
+        if (dir === 'right') { if (b.left < a.right - 2) return; main = dx;  cross = Math.abs(dy); }
+        if (dir === 'up')    { if (b.bottom > a.top + 2) return; main = -dy; cross = Math.abs(dx); }
+        if (dir === 'down')  { if (b.top < a.bottom - 2) return; main = dy;  cross = Math.abs(dx); }
+        var score = main + cross * 2.5;
+        if (score < bestScore) { bestScore = score; best = el; }
+      });
+      if (best) {
+        best.focus({ preventScroll: true });
+        best.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+      }
+    }
+
+    function goBack() {
+      if (sheetOpen()) { closeSheet(); return true; }
+      if (isFullscreen()) { toggleFullscreen(); return true; }
+      if (state.locked) { hideLock(true); return true; }
+      return false;
+    }
+
+    document.addEventListener('keydown', function (e) {
+      var code = e.keyCode;
+      var t = e.target;
+      var typing = t && (t.tagName === 'INPUT' && t.type !== 'range' || t.tagName === 'SELECT');
+
+      if (is(code, KEY.BACK)) {
+        if (typing && code === 8) return;
+        if (goBack()) e.preventDefault();
+        return;
+      }
+      if (is(code, KEY.CH_UP)) { e.preventDefault(); zap(1); return; }
+      if (is(code, KEY.CH_DOWN)) { e.preventDefault(); zap(-1); return; }
+      if (is(code, KEY.PLAY_PAUSE)) { e.preventDefault(); Player.toggle(); return; }
+
+      var dir = is(code, KEY.LEFT) ? 'left' : is(code, KEY.RIGHT) ? 'right' : is(code, KEY.UP) ? 'up' : is(code, KEY.DOWN) ? 'down' : null;
+      if (dir) {
+        if (typing && (dir === 'left' || dir === 'right')) return;
+        if (t && t.type === 'range' && (dir === 'left' || dir === 'right')) return;
+        document.documentElement.classList.add('kbd-nav');
+        e.preventDefault();
+        moveFocus(dir);
+        showControls();
+        return;
+      }
+
+      if (!typing && !sheetOpen()) {
+        if (t === playerBox && (code === 13 || code === 32)) { e.preventDefault(); Player.toggle(); }
+        else if (code === 70) toggleFullscreen();
+        else if (code === 77) $('btnMute').click();
+      }
+    });
+    document.addEventListener('mousedown', function () { document.documentElement.classList.remove('kbd-nav'); });
+
+    /* =========================================================
+       COMPTEUR "EN LIGNE"
+       ========================================================= */
+    (function activeCounter() {
+      var base = 1200 + Math.floor(Math.random() * 300);
+      var el = $('activeNow');
+      if (!el) return;
+      el.textContent = base.toLocaleString('fr-FR');
+      setInterval(function () {
+        base += Math.floor(Math.random() * 7) - 3;
+        if (base < 900) base = 900;
+        el.textContent = base.toLocaleString('fr-FR');
+      }, 5000);
+    })();
+
+    /* =========================================================
+       DÉMARRAGE
+       ========================================================= */
+    $('waFloat').href = waLink(CONFIG.whatsappHelp);
+    $('perkCount').textContent = 'Les ' + PREMIUM_COUNT + ' chaînes premium débloquées';
+    $('stripChannelCount').textContent = '+' + PREMIUM_COUNT;
+
+    renderPlans();
+    renderPayment();
+    updateStickySub();
+    renderChips();
+    renderGrid();
+    renderReview();
+
+    var lastName = store.get('last', CONFIG.defaultChannel);
+    var start = FREE_LIST.filter(function (c) { return c.name === lastName; })[0] ||
+                FREE_LIST.filter(function (c) { return c.name === CONFIG.defaultChannel; })[0] ||
+                FREE_LIST[0];
+    selectChannel(start);
+
+    console.log('[Africa Box] ' + CHANNELS.length + ' chaînes (' + FREE_LIST.length + ' gratuites, ' + PREMIUM_COUNT + ' premium) — Pays: ' + getCountryCode() + ' (' + getCountry().currency + ')');
+  })();
+  </script>
+</body>
+</html>
